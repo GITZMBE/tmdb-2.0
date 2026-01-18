@@ -1,6 +1,7 @@
 const AUTHENTICATION_KEY = process.env.REACT_APP_AUTHENTICATION_KEY;
 const API_KEY = process.env.REACT_APP_API_KEY;
-export const fetchMovieInfo = async (callback, id) => {
+
+export const fetchMovieInfo = async (id) => {
   const url = `https://api.themoviedb.org/3/movie/${id}`;
   const options = {
     method: "GET",
@@ -11,7 +12,7 @@ export const fetchMovieInfo = async (callback, id) => {
   };
   const response = await fetch(url, options);
   const results = await response.json();
-  callback(results);
+  return results;
 };
 
 export const fetchTopMovies = async (callback) => {
@@ -45,7 +46,7 @@ export const fetchTopMovie = async (callback) => {
   callback(topMovie);
 };
 
-export const fetchVideoKey = async (id, callback) => {
+export const fetchVideoKey = async (id) => {
   const url = `https://api.themoviedb.org/3/movie/${id}/videos?language=en-US`;
   const options = {
     method: "GET",
@@ -56,7 +57,7 @@ export const fetchVideoKey = async (id, callback) => {
   };
   const response = await fetch(url, options);
   const results = await response.json();
-  callback(results.results[0]);
+  return results.results[0];
 };
 
 export const fetchPopular = async (callback) => {
@@ -121,7 +122,7 @@ export const fetchRelated = async (id, callback) => {
   callback(movies);
 };
 
-export const fetchGenres = async (callback) => {
+export const fetchGenres = async () => {
   const url = "https://api.themoviedb.org/3/genre/movie/list?language=en";
   const options = {
     method: "GET",
@@ -132,8 +133,8 @@ export const fetchGenres = async (callback) => {
   };
   const response = await fetch(url, options);
   const results = await response.json();
-  const genres = results.genres;
-  callback(genres);
+  const genres = await results.genres;
+  return genres;
 };
 
 export const fetchProviders = async (callback) => {
@@ -257,4 +258,4 @@ export const fetchMoviesByGenre = async (callback, id, page) => {
   const response = await fetch(url, options);
   const results = await response.json();
   callback(results);
-}
+};

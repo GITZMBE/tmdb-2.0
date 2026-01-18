@@ -10,7 +10,7 @@ import { FavoriteMoviesState } from "../states";
 import { getYear, twoDigitRating } from "../utils";
 import { getFavoritMovies, saveFavoritMovies } from "../storage";
 
-function Poster({ movie }) {
+export const Poster = ({ movie }) => {
   const baseUrl = "https://image.tmdb.org/t/p/w1280";
   const [movieObject, setMovieObject] = useState({});
   useEffect(() => {
@@ -34,15 +34,14 @@ function Poster({ movie }) {
   useEffect(() => {
     const favs = getFavoritMovies();
     setFavorites(favs);
-  }, [])
+  }, [setFavorites]);
   const addToFavorites = () => {
-    const isAllreadyAdded = favorites.some(
-      (favorite) => favorite.id === movie.id
-    );
-    if (!isAllreadyAdded) {
-      setFavorites([...favorites, movie]);
-      saveFavoritMovies([...favorites, movie]);
-    }
+    const isAllreadyAdded = favorites?.some((favorite) => favorite.id === movie.id);
+
+    if (isAllreadyAdded) return;
+
+    setFavorites([...favorites, movie]);
+    saveFavoritMovies([...favorites, movie]);
   };
   const removeFromFavorites = () => {
     const isFavorite = favorites.some((favorite) => favorite.id === movie.id);

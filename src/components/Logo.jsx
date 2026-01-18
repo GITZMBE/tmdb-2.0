@@ -1,7 +1,7 @@
 import React from "react";
 import { FaStream } from "react-icons/fa";
 
-function Logo({ display }) {
+export const Logo = ({ display }) => {
   return (
     <div
       className={`${

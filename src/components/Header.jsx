@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { BiSearch } from "react-icons/bi";
 import { AiFillHome, AiOutlineMenu } from "react-icons/ai";
@@ -7,11 +7,11 @@ import Poster from "./Poster";
 import Menu from "./Menu";
 import { useRecoilState } from "recoil";
 import { openMenuState, openSearchState } from "../states";
-import Logo from "../assets/Logo";
+import Logo from "./Logo";
 import { BsFilterSquare } from "react-icons/bs";
 import { MdLocalMovies } from "react-icons/md";
 
-function Header() {
+export const Header = () => {
   const [openSearch, setOpenSearch] = useRecoilState(openSearchState);
   const [menuOpen, setMenuOpen] = useRecoilState(openMenuState);
   const openMenu = () => {
@@ -61,17 +61,28 @@ function Header() {
     setOpenSearch(!openSearch);
   };
 
-  window.addEventListener("scroll", () => {
-    const header = document.getElementById("header");
-    setBackgroundOpacity(1);
-    if (!openSearch) {
-      const calculatedOpacity = Math.min(
-        window.scrollY / header.clientHeight,
-        1
-      );
-      setBackgroundOpacity(calculatedOpacity);
-    }
-  });
+  // useEffect(() => {
+  //   const onScroll = () => {
+  //     // keep fully opaque while search is open
+  //     if (openSearch) {
+  //       setBackgroundOpacity(1);
+  //       return;
+  //     }
+  //     const header = document.getElementById("header");
+
+  //     if (!header) return;
+
+  //     const headerClientHeight = header?.clientHeight || 1;
+  //     const calculatedOpacity = Math.min(window.scrollY / headerClientHeight, 1);
+  //     setBackgroundOpacity(calculatedOpacity);
+  //   };
+
+  //   window.addEventListener("scroll", onScroll);
+  //   // initialize opacity based on current scroll
+  //   onScroll();
+
+  //   return () => window.removeEventListener("scroll", onScroll);
+  // }, [openSearch]);
 
   return (
     <header
@@ -150,7 +161,7 @@ function Header() {
           />
         </div>
       </div>
-      <div className='fixed top-0 flex justify-center items-start w-full max-h-screen overflow-y-auto py-12 hide-scrollbar'>
+      <div className={`fixed top-0 flex justify-center items-start w-full max-h-screen overflow-y-auto ${openSearch && 'py-12'} hide-scrollbar`}>
         <div
           id='movieSection'
           className='flex flex-wrap justify-center sm:justify-start items-start gap-4 pt-8 px-12 w-full max-w-[1408px]'

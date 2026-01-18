@@ -3,7 +3,7 @@ import { Outlet } from "react-router-dom";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 
-function Layer() {
+export const Layer = () => {
   return (
     <>
       <Header />
@@ -11,6 +11,6 @@ function Layer() {
       <Footer />
     </>
   );
-}
+};
 
 export default Layer;

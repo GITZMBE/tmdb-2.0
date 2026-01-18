@@ -11,25 +11,27 @@ function Banner({ topMovie, children }) {
     fetchGenres(setGenresList);
   }, []);
 
+  // const { vote_average, release_date, ...rest } = topMovie || { backdrop_path: '', title: '', vote_average: '', release_date: '', overview: '', genre_ids: [] };
+  // const movie = { vote_average: twoDigitRating(topMovie.vote_average * 10), release_date: getYear(topMovie.release_date), ...rest };
+  // const { backdrop_path, title, vote_average, release_date, overview, genre_ids } = movie;
+
   const baseUrl = "https://image.tmdb.org/t/p/w1280";
-  const url = topMovie.backdrop_path;
-  const bannerStyle = {
-    backgroundImage: `url('${baseUrl + url}')`,
-  };
-  const title = topMovie.title;
-  const rating = twoDigitRating(topMovie.vote_average * 10);
-  const releaseDate = getYear(topMovie.release_date);
-  const synopsis = topMovie.overview;
-  const genreIds = topMovie.genre_ids || [];
+  const streamUrl = "https://multiembed.mov/";
+  const url = (topMovie && topMovie.backdrop_path) ? topMovie.backdrop_path : '';
+  const title = (topMovie && topMovie.title) ? topMovie.title : '';
+  const rating = twoDigitRating((topMovie && topMovie.vote_average) ? topMovie.vote_average * 10 : '');
+  const releaseDate = getYear((topMovie && topMovie.release_date) ? topMovie.release_date : '');
+  const synopsis = (topMovie && topMovie.overview) ? topMovie.overview : '';
+  const genreIds = (topMovie && topMovie.genre_ids) ? topMovie.genre_ids : [];
 
   return (
     <div
       id='banner'
-      style={bannerStyle}
+      style={{ backgroundImage: (baseUrl && url) ? `url('${baseUrl + url}')` : '' }}
       className='relative w-full aspect-video min-h-[50vh] max-h-screen background-center'
     >
       {children}
-      <Link to={`/moreInfo/${topMovie.id}`}>
+      <Link to={(topMovie && topMovie.id) ? `/moreInfo/${topMovie.id}` : '/'}>
         <div
           id='filter'
           className='absolute top-0 left-0 bottom-0 right-0 text-white pt-[60px] pb-8 px-4 sm:px-12 w-full bg-gradient-to-r from-black from-30% opacity-90'
@@ -37,10 +39,14 @@ function Banner({ topMovie, children }) {
           <div className='hidden xs:flex flex-col justify-center gap-2  md:w-3/5 lg:w-2/5 h-full'>
             <div id='title-container' className='flex items-center gap-4 py-2'>
               <h1 className='text-3xl sm:text-5xl font-bold'>{title}</h1>
-              <AiFillPlayCircle
-                size={36}
-                className='fill-secondary min-w-[36px]'
-              />
+              {topMovie && topMovie?.id &&
+                <a href={streamUrl + `?video_id=${topMovie.id}&tmdb=1`} target='_blank' rel='noreferrer' onClick={(e) => e.stopPropagation()}>
+                  <AiFillPlayCircle
+                    size={36}
+                    className='text-secondary min-w-[36px]'
+                  />
+                </a>
+              }
             </div>
             <p className='space-x-2 font-bold text-white text-sm uppercase'>
               <span className='px-1 sm:px-2 py-[2px] sm:py-1 text-sm sm:text-base rounded bg-green-600'>

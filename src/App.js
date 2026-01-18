@@ -1,13 +1,8 @@
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Home from "./pages/Home";
-import Layer from "./pages/Layer";
-import MoreInfo from "./pages/MoreInfo";
-import Filter from "./pages/Filter";
-import Genres from "./components/Genres";
-import Genre from "./components/Genre";
+import { Home, Layer, MoreInfo, Filter, Genres, Genre } from './pages';
 
-function App() {
+const App = () => {
   return (
     <div className='App'>
       <BrowserRouter>

@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { AiOutlineArrowUp, AiOutlineArrowDown } from "react-icons/ai";
-import { fetchGenres, fetchMovieInfo, fetchVideoKey } from "../api/fetch";
+import { fetchMovieInfo, fetchVideoKey } from "../api/fetch";
 import Trailer from "../components/Trailer";
 import Banner from "../components/Banner";
 import Related from "../components/Related";
@@ -9,45 +9,117 @@ import Credits from "../components/Credits";
 import Reviews from "../components/Reviews";
 import { useParams } from "react-router-dom";
 
-function MoreInfo() {
+const genresData = [
+  {
+      "id": 28,
+      "name": "Action"
+  },
+  {
+      "id": 12,
+      "name": "Adventure"
+  },
+  {
+      "id": 16,
+      "name": "Animation"
+  },
+  {
+      "id": 35,
+      "name": "Comedy"
+  },
+  {
+      "id": 80,
+      "name": "Crime"
+  },
+  {
+      "id": 99,
+      "name": "Documentary"
+  },
+  {
+      "id": 18,
+      "name": "Drama"
+  },
+  {
+      "id": 10751,
+      "name": "Family"
+  },
+  {
+      "id": 14,
+      "name": "Fantasy"
+  },
+  {
+      "id": 36,
+      "name": "History"
+  },
+  {
+      "id": 27,
+      "name": "Horror"
+  },
+  {
+      "id": 10402,
+      "name": "Music"
+  },
+  {
+      "id": 9648,
+      "name": "Mystery"
+  },
+  {
+      "id": 10749,
+      "name": "Romance"
+  },
+  {
+      "id": 878,
+      "name": "Science Fiction"
+  },
+  {
+      "id": 10770,
+      "name": "TV Movie"
+  },
+  {
+      "id": 53,
+      "name": "Thriller"
+  },
+  {
+      "id": 10752,
+      "name": "War"
+  },
+  {
+      "id": 37,
+      "name": "Western"
+  }
+]
+
+export const MoreInfo = () => {
   const { id } = useParams();
-  const [selected, setSelected] = useState({});
-  useEffect(() => {
-    id && fetchMovieInfo(setSelected, id);
-  }, [id]);
-
-  const title = selected.title;
-  const description = selected.overview;
-  const releaseDate = selected.release_date;
-  const genreIds = selected.genre_ids || [];
-
-  const [votes, setVotes] = useState(0);
-  useEffect(() => {
-    if (selected && selected.vote_count) {
-      setVotes(selected.vote_count);
-    }
-  }, [selected]);
-
-  const popularity = selected.vote_average;
-  let popularityPercent = popularity * 10;
-  popularityPercent = popularityPercent.toString().substring(0, 2);
-  const popularityStyle = {
-    width: `${popularityPercent}%`,
-  };
+  const [movie, setMovie] = useState(null);
   const [videoInfo, setVideoInfo] = useState({});
-  useEffect(() => {
-    Object.keys(selected).length > 0 && fetchVideoKey(id, setVideoInfo);
-  }, [selected, id]);
+  const [genres, setGenres] = useState([]);
+  const [votes, setVotes] = useState(0);
 
-  const [genresList, setGenresList] = useState([]);
+  let { title, overview, release_date, genre_ids, vote_count, vote_average } = useMemo(() => movie || { title: '', overview: '', release_date: '', genre_ids: [], vote_count: 0, vote_average: 0 }, [movie]);
+
+  const getPopularity = ( voteAverage = 1 ) => {return (voteAverage * 10).toString().substring(0, 2)};
+
   useEffect(() => {
-    fetchGenres(setGenresList);
+    console.log(movie)
+    setGenres(genresData);
+    // fetchGenres().then((genres) => setGenres(genres));
   }, []);
 
-  return Object.keys(selected).length > 0 ? (
+  useEffect(() => {
+    if (!id) return;
+
+    fetchMovieInfo(id).then((selectedMovie) => setMovie(selectedMovie));
+    fetchVideoKey(id).then((vid) => setVideoInfo(vid));
+  }, [id]);
+
+  useEffect(() => {
+    setVotes(vote_count);
+  }, [vote_count]);
+
+  return movie && (
     <div id='moreInfo'>
       <div className='w-full min-h-screen pb-4 bg-primary text-white space-y-4'>
-        <Banner topMovie={selected}>
+        <Banner topMovie={movie}>
           <Trailer videoKey={videoInfo && videoInfo.key} className='hidden' />
         </Banner>
         <div className='px-12 space-y-4'>
@@ -55,27 +127,21 @@ function MoreInfo() {
           <div>
             <h2 className='text-xl font-bold'>Genres</h2>
             <p className='flex gap-2'>
-              {Object.keys(genreIds).length > 0
-                ? genreIds.map((genreId, index) =>
-                    genresList.map((genreItem) =>
-                      genreId === genreItem.id ? (
-                        <React.Fragment key={index}>
-                          <span>{genreItem.name}</span>&nbsp;
-                          {index !== genreIds.length - 1 && <BsDot size={22} />}
-                        </React.Fragment>
-                      ) : null
-                    )
-                  )
-                : null}
+              {genre_ids?.map((genreId, index) => (
+                <React.Fragment key={index}>
+                  <span>{genres.find((genreItem) => genreItem.id === genreId).name}</span>&nbsp;
+                  {index !== genre_ids.length - 1 && <BsDot size={22} />}
+                </React.Fragment>
+              ))}
             </p>
           </div>
           <div className='pb-4'>
             <h2 className='text-xl font-bold'>Description</h2>
-            <p>{description}</p>
+            <p>{overview}</p>
           </div>
           <div className='pb-4'>
             <h2 className='text-xl font-bold'>Release Date</h2>
-            <p>{releaseDate}</p>
+            <p>{release_date}</p>
           </div>
           <div className='flex items-center gap-4'>
             <h2 className='text-xl font-bold'>Votes: </h2>
@@ -92,18 +158,18 @@ function MoreInfo() {
             </div>
           </div>
           <div className='relative flex w-full h-12 border-white border-2'>
-            <div style={popularityStyle} className='bg-green-500 h-full'></div>
+            <div style={{ width: `${getPopularity(vote_average)}%` }} className='bg-green-500 h-full'></div>
             <p className='absolute w-full text-center leading-[48px] tracking-[16px]'>
-              Popularity {popularityPercent}%
+              Popularity {getPopularity(vote_average)}%
             </p>
           </div>
-          <Credits id={id} />
+          {/* <Credits id={id} />
           <Reviews id={id} />
-          <Related id={id} />
+          <Related id={id} /> */}
         </div>
       </div>
     </div>
-  ) : null;
+  );
 }
 
 export default MoreInfo;

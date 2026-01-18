@@ -3,15 +3,16 @@ import { fetchMovieCredits } from "../api/fetch";
 
 function Credits({ id }) {
   const [cast, setCast] = useState([]);
+  const scrollContainerRef = useRef(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
+
   useEffect(() => {
     fetchMovieCredits(id, setCast);
   }, [id]);
   const baseUrl = "https://image.tmdb.org/t/p/w780";
 
-  const scrollContainerRef = useRef(null);
-  const [isDragging, setIsDragging] = useState(false);
-  const [startX, setStartX] = useState(0);
-  const [scrollLeft, setScrollLeft] = useState(0);
   const handleMouseDown = (e) => {
     if (scrollContainerRef.current) {
       setIsDragging(true);
@@ -45,6 +46,7 @@ function Credits({ id }) {
       scrollContainerRef.current.scrollLeft = scrollLeft - walk;
     }
   };
+
   return (
     <div id='credits' className='w-full space-y-4'>
       <h2 className='font-bold text-3xl'>Credits</h2>

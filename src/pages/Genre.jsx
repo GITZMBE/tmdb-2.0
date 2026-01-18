@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { fetchMoviesByGenre } from "../api/fetch";
-import Poster from "./Poster";
+import { fetchMoviesByGenre } from "../api";
+import { Poster } from "../components";
 
-function Genre() {
+export const Genre = () => {
   const { id } = useParams();
   const [page, setPage] = useState(1);
   const [movies, setMovies] = useState([]);
@@ -13,11 +13,11 @@ function Genre() {
   return movies && movies.results ? (
     <div id='genre' className='py-4 text-white'>
       <div className='min-w-screen py-4'>
-          <div className='flex flex-wrap gap-4'>
-            {movies.results.length > 0
-              ? movies.results.map((movie) => <Poster key={movie.id} movie={movie} />)
-              : null}
-          </div>
+        <div className='flex flex-wrap gap-4'>
+          {movies.results.length > 0
+            ? movies.results.map((movie) => <Poster key={movie.id} movie={movie} />)
+            : null}
+        </div>
       </div>
       <div className="flex gap-8 justify-center items-center">
         <button onClick={page > 1 ? () => {setPage(page - 1)} : null} className="text-gray-500 hover:text-white">{'<<'}</button>

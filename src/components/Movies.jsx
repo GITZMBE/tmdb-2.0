@@ -12,10 +12,13 @@ import Favorites from "./Favorites";
 import MoviesContainer from "./MoviesContainer";
 
 function Movies() {
-  const [bannerObject, setBannerObject] = useState("");
-  const [videoInfo, setVideoInfo] = useState({});
+  const [bannerObject, setBannerObject] = useState(null);
+  const [videoInfo, setVideoInfo] = useState(null);
   useEffect(() => {
     fetchTopMovie(setBannerObject);
+  }, []);
+
+  useEffect(() => {
     bannerObject
       ? fetchVideoKey(bannerObject.id, setVideoInfo)
       : setVideoInfo({});
@@ -27,7 +30,7 @@ function Movies() {
       className='flex flex-col pb-[60px] bg-primary min-h-screen'
     >
       <Banner topMovie={bannerObject}>
-        <Trailer videoKey={videoInfo.key} className='hidden' />
+        <Trailer videoKey={(videoInfo && videoInfo.key !== null) ? videoInfo.key : undefined} className='hidden' />
       </Banner>
       <main className='w-full text-white'>
         <Favorites />
