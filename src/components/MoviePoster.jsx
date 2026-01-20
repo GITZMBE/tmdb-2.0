@@ -10,7 +10,7 @@ import { FavoriteMoviesState } from "../states";
 import { getYear, twoDigitRating } from "../utils";
 import { getFavoritMovies, saveFavoritMovies } from "../storage";
 
-export const Poster = ({ movie }) => {
+export const MoviePoster = ({ movie }) => {
   const baseUrl = "https://image.tmdb.org/t/p/w1280";
   const [movieObject, setMovieObject] = useState({});
   useEffect(() => {
@@ -71,7 +71,7 @@ export const Poster = ({ movie }) => {
 
   return (
     <div className='relative flex rounded w-posterWidth aspect-poster'>
-      <Link to={`/moreInfo/${movie.id}`} onClick={handleClick} className='w-posterWidth'>
+      <Link to={`/movie/${movie.id}`} onClick={handleClick} className='w-posterWidth'>
         <div
           style={bgStyle}
           className='group relative w-posterWidth aspect-poster background-center rounded overflow-hidden transitioning'
@@ -108,7 +108,7 @@ export const Poster = ({ movie }) => {
             />
           </button>
         </div>
-        <Link to={`/moreInfo/${movie.id}`} onClick={handleClick}>
+        <Link to={`/movie/${movie.id}`} onClick={handleClick}>
           <h2 className='py-2 font-bold text-base'>{title}</h2>
         </Link>
         <p className='flex flex-wrap gap-2 font-bold text-white text-sm uppercase'>
@@ -143,4 +143,4 @@ export const Poster = ({ movie }) => {
   );
 }
 
-export default Poster;
+export default MoviePoster;

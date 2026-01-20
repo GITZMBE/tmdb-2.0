@@ -7,9 +7,11 @@ import {
   fetchTopMovies,
   fetchPopular,
   fetchUpcoming,
+  fetchTopSeries,
 } from "../api/fetch";
 import Favorites from "./Favorites";
 import MoviesContainer from "./MoviesContainer";
+import SeriesContainer from "./SeriesContainer";
 
 function Movies() {
   const [bannerObject, setBannerObject] = useState(null);
@@ -37,6 +39,7 @@ function Movies() {
         <MoviesContainer title='Top Rated' fetchFunction={fetchTopMovies} />
         <MoviesContainer title='Popular' fetchFunction={fetchPopular} />
         <MoviesContainer title='Upcoming' fetchFunction={fetchUpcoming} />
+        <SeriesContainer title='Top Series' fetchFunction={fetchTopSeries} />
       </main>
     </div>
   );

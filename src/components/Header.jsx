@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { BiSearch } from "react-icons/bi";
 import { AiFillHome, AiOutlineMenu } from "react-icons/ai";
 import { fetchQuery } from "../api/fetch";
-import Poster from "./Poster";
+import Poster from "./MoviePoster";
 import Menu from "./Menu";
 import { useRecoilState } from "recoil";
 import { openMenuState, openSearchState } from "../states";
@@ -17,7 +17,7 @@ export const Header = () => {
   const openMenu = () => {
     setMenuOpen(!menuOpen);
   };
-  const [backgroundOpacity, setBackgroundOpacity] = useState(0);
+  const [backgroundOpacity, setBackgroundOpacity] = useState(1);
   useEffect(() => {
     const searchBar = document.getElementById("searchBar");
     const header = document.getElementById("header");
@@ -87,7 +87,7 @@ export const Header = () => {
   return (
     <header
       id='header'
-      className='fixed z-30 flex flex-col justify-start w-full h-[92px] sm:h-[60px] overflow-y-hidden'
+      className='sticky top-0 z-30 flex flex-col justify-start w-full h-[92px] sm:h-[60px] overflow-y-hidden'
       style={{ backgroundColor: `rgb(13, 28, 40, ${backgroundOpacity})` }}
     >
       <div
@@ -161,7 +161,9 @@ export const Header = () => {
           />
         </div>
       </div>
-      <div className={`fixed top-0 flex justify-center items-start w-full max-h-screen overflow-y-auto ${openSearch && 'py-12'} hide-scrollbar`}>
+      <div
+        className={`fixed top-0 flex justify-center items-start w-full max-h-screen overflow-y-auto ${openSearch && "py-12"} hide-scrollbar`}
+      >
         <div
           id='movieSection'
           className='flex flex-wrap justify-center sm:justify-start items-start gap-4 pt-8 px-12 w-full max-w-[1408px]'
@@ -182,6 +184,6 @@ export const Header = () => {
       <Menu />
     </header>
   );
-}
+};
 
 export default Header;

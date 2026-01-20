@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { fetchReviews } from "../api/fetch";
+import { fetchReviews, fetchSeriesReviews } from "../api/fetch";
 import { splitReviewsDate } from "../utils";
 
-function Reviews({ id }) {
+function Reviews({ id, type = 'movie' }) {
   const [reviews, setReviews] = useState([]);
   useEffect(() => {
-    fetchReviews(id, setReviews);
+    type === 'movie' ? fetchReviews(id, setReviews) : fetchSeriesReviews(id, setReviews);
   }, [id]);
   return (
     <div

@@ -1,6 +1,6 @@
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Home, Layer, MoreInfo, Filter, Genres, Genre } from './pages';
+import { Home, Layer, Filter, Genres, Genre, MoviePage, SeriesPage } from './pages';
 
 const App = () => {
   return (
@@ -10,8 +10,11 @@ const App = () => {
           <Route path='/' element={<Layer />}>
             <Route index element={<Home />} />
             <Route path='/home' element={<Home />} />
-            <Route path='/moreInfo'>
-              <Route path=':id' element={<MoreInfo />} />
+            <Route path='/movie'>
+              <Route path=':id' element={<MoviePage />} />
+            </Route>
+            <Route path='/series'>
+              <Route path=':id' element={<SeriesPage />} />
             </Route>
             <Route path='/filter' element={<Filter />} />
             <Route path='/genres' element={<Genres />}>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Poster from "./Poster";
+import Poster from "./MoviePoster";
 import Draggable from "./Draggable";
 
 function MoviesContainer({ title, fetchFunction }) {

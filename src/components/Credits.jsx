@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
-import { fetchMovieCredits } from "../api/fetch";
+import { fetchMovieCredits, fetchSeriesCredits } from "../api/fetch";
 
-function Credits({ id }) {
+function Credits({ id, type = 'movie' }) {
   const [cast, setCast] = useState([]);
   const scrollContainerRef = useRef(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -9,7 +9,7 @@ function Credits({ id }) {
   const [scrollLeft, setScrollLeft] = useState(0);
 
   useEffect(() => {
-    fetchMovieCredits(id, setCast);
+    type === 'movie' ? fetchMovieCredits(id, setCast) : fetchSeriesCredits(id, setCast);
   }, [id]);
   const baseUrl = "https://image.tmdb.org/t/p/w780";
 

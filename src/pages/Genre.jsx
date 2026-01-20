@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { fetchMoviesByGenre } from "../api";
-import { Poster } from "../components";
+import { MoviePoster } from "../components";
 
 export const Genre = () => {
   const { id } = useParams();
@@ -15,7 +15,7 @@ export const Genre = () => {
       <div className='min-w-screen py-4'>
         <div className='flex flex-wrap gap-4'>
           {movies.results.length > 0
-            ? movies.results.map((movie) => <Poster key={movie.id} movie={movie} />)
+            ? movies.results.map((movie) => <MoviePoster key={movie.id} movie={movie} />)
             : null}
         </div>
       </div>

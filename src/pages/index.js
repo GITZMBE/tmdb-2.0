@@ -1,5 +1,6 @@
 export * from './Home';
-export * from './MoreInfo';
+export * from './MoviePage';
+export * from './SeriesPage';
 export * from './Filter';
 export * from './Genres';
 export * from './Genre';

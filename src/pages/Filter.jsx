@@ -1,85 +1,85 @@
 import React, { useEffect, useState } from "react";
 import { fetchFilter, fetchGenres, fetchTranslations } from "../api/fetch";
-import Poster from "../components/Poster";
+import Poster from "../components/MoviePoster";
 import { BsFilterSquare } from "react-icons/bs";
 
 const genresData = [
   {
-      "id": 28,
-      "name": "Action"
+    id: 28,
+    name: "Action",
   },
   {
-      "id": 12,
-      "name": "Adventure"
+    id: 12,
+    name: "Adventure",
   },
   {
-      "id": 16,
-      "name": "Animation"
+    id: 16,
+    name: "Animation",
   },
   {
-      "id": 35,
-      "name": "Comedy"
+    id: 35,
+    name: "Comedy",
   },
   {
-      "id": 80,
-      "name": "Crime"
+    id: 80,
+    name: "Crime",
   },
   {
-      "id": 99,
-      "name": "Documentary"
+    id: 99,
+    name: "Documentary",
   },
   {
-      "id": 18,
-      "name": "Drama"
+    id: 18,
+    name: "Drama",
   },
   {
-      "id": 10751,
-      "name": "Family"
+    id: 10751,
+    name: "Family",
   },
   {
-      "id": 14,
-      "name": "Fantasy"
+    id: 14,
+    name: "Fantasy",
   },
   {
-      "id": 36,
-      "name": "History"
+    id: 36,
+    name: "History",
   },
   {
-      "id": 27,
-      "name": "Horror"
+    id: 27,
+    name: "Horror",
   },
   {
-      "id": 10402,
-      "name": "Music"
+    id: 10402,
+    name: "Music",
   },
   {
-      "id": 9648,
-      "name": "Mystery"
+    id: 9648,
+    name: "Mystery",
   },
   {
-      "id": 10749,
-      "name": "Romance"
+    id: 10749,
+    name: "Romance",
   },
   {
-      "id": 878,
-      "name": "Science Fiction"
+    id: 878,
+    name: "Science Fiction",
   },
   {
-      "id": 10770,
-      "name": "TV Movie"
+    id: 10770,
+    name: "TV Movie",
   },
   {
-      "id": 53,
-      "name": "Thriller"
+    id: 53,
+    name: "Thriller",
   },
   {
-      "id": 10752,
-      "name": "War"
+    id: 10752,
+    name: "War",
   },
   {
-      "id": 37,
-      "name": "Western"
-  }
+    id: 37,
+    name: "Western",
+  },
 ];
 const localesData = [
   "af-ZA",
@@ -221,9 +221,12 @@ const localesData = [
   "zh-HK",
   "zh-SG",
   "zh-TW",
-  "zu-ZA"
+  "zu-ZA",
 ];
-const yearsData = Array.from({ length: new Date().getFullYear() - 1900 + 1 }, (year, index) => year);
+const yearsData = Array.from(
+  { length: new Date().getFullYear() - 1900 + 1 },
+  (year, index) => year,
+);
 
 export const Filter = () => {
   const defaultData = {
@@ -243,9 +246,19 @@ export const Filter = () => {
   const filterSearch = () => {
     const { genre, pages, locale, year } = formData;
 
-    if (!genre || !pages || pages < 1 || pages > 2000 || !locale || !year || year > new Date().getFullYear() || year < 1900) return;
+    if (
+      !genre ||
+      !pages ||
+      pages < 1 ||
+      pages > 2000 ||
+      !locale ||
+      !year ||
+      year > new Date().getFullYear() ||
+      year < 1900
+    )
+      return;
 
-    fetchFilter( genre, pages, locale, year, setMovies);
+    fetchFilter(genre, pages, locale, year, setMovies);
   };
 
   useEffect(() => {
@@ -261,7 +274,9 @@ export const Filter = () => {
             id='genre'
             className='bg-secondary text-tertiary px-2 cursor-pointer'
             defaultValue={28}
-            onChange={(e) => setFormData((prev) => ({ ...prev, genre: e.target.value }))}
+            onChange={(e) =>
+              setFormData((prev) => ({ ...prev, genre: e.target.value }))
+            }
           >
             <option value='' className='text-gray-500'>
               Genre
@@ -280,16 +295,22 @@ export const Filter = () => {
             min={1}
             max={2000}
             value={formData.pages}
-            onChange={(e) => setFormData((prev) => ({ ...prev, pages: e.target.value }))}
+            onChange={(e) =>
+              setFormData((prev) => ({ ...prev, pages: e.target.value }))
+            }
           />
           <select
             name=''
             id='locale'
             className='bg-secondary px-2 text-tertiary hide-scrollbar cursor-pointer'
-            defaultValue={'en-US'}
-            onChange={(e) => setFormData((prev) => ({ ...prev, locale: e.target.value }))}
+            defaultValue={"en-US"}
+            onChange={(e) =>
+              setFormData((prev) => ({ ...prev, locale: e.target.value }))
+            }
           >
-            <option value='' className='text-gray-500'>Language</option>
+            <option value='' className='text-gray-500'>
+              Language
+            </option>
             {optionsData.locales.map((country, index) => (
               <option key={index} value={country}>
                 {country}
@@ -301,13 +322,18 @@ export const Filter = () => {
             name=''
             defaultValue={new Date().getFullYear()}
             className='bg-secondary text-tertiary hide-scrollbar cursor-pointer'
-            onChange={(e) => setFormData((prev) => ({ ...prev, year: e.target.value }))}
+            onChange={(e) =>
+              setFormData((prev) => ({ ...prev, year: e.target.value }))
+            }
           >
             <option value='' className='text-gray-500'>
               Release Year
             </option>
             {optionsData.years.map((year, index) => (
-              <option key={new Date().getFullYear() - index} value={new Date().getFullYear() - index}>
+              <option
+                key={new Date().getFullYear() - index}
+                value={new Date().getFullYear() - index}
+              >
                 {new Date().getFullYear() - index}
               </option>
             ))}
@@ -327,6 +353,6 @@ export const Filter = () => {
       </div>
     </div>
   );
-}
+};
 
 export default Filter;

@@ -88,19 +88,20 @@ const genresData = [
   }
 ]
 
-export const MoreInfo = () => {
+export const MoviePage = () => {
   const { id } = useParams();
   const [movie, setMovie] = useState(null);
   const [videoInfo, setVideoInfo] = useState({});
   const [genres, setGenres] = useState([]);
   const [votes, setVotes] = useState(0);
 
+  const streamUrl = "https://multiembed.mov/";
+
   let { title, overview, release_date, genre_ids, vote_count, vote_average } = useMemo(() => movie || { title: '', overview: '', release_date: '', genre_ids: [], vote_count: 0, vote_average: 0 }, [movie]);
 
   const getPopularity = ( voteAverage = 1 ) => {return (voteAverage * 10).toString().substring(0, 2)};
 
   useEffect(() => {
-    console.log(movie)
     setGenres(genresData);
     // fetchGenres().then((genres) => setGenres(genres));
   }, []);
@@ -119,9 +120,16 @@ export const MoreInfo = () => {
   return movie && (
     <div id='moreInfo'>
       <div className='w-full min-h-screen pb-4 bg-primary text-white space-y-4'>
-        <Banner topMovie={movie}>
-          <Trailer videoKey={videoInfo && videoInfo.key} className='hidden' />
-        </Banner>
+        {/* <Banner topMovie={movie}> */}
+          {/* <Trailer videoKey={videoInfo && videoInfo.key} className='hidden' /> */}
+          <iframe
+            src={streamUrl + `?video_id=${movie.id}&tmdb=1`}
+            title={`Stream for ${title || movie.title || `movie-${movie.id}`}`}
+            frameBorder="0"
+            className="w-full aspect-video"
+            allowFullScreen
+          />
+        {/* </Banner> */}
         <div className='px-12 space-y-4'>
           <h1 className='text-3xl font-bold'>{title}</h1>
           <div>
@@ -163,13 +171,13 @@ export const MoreInfo = () => {
               Popularity {getPopularity(vote_average)}%
             </p>
           </div>
-          {/* <Credits id={id} />
+          <Credits id={id} />
           <Reviews id={id} />
-          <Related id={id} /> */}
+          <Related id={id} />
         </div>
       </div>
     </div>
   );
 }
 
-export default MoreInfo;
+export default MoviePage;
