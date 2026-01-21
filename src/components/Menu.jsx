@@ -33,7 +33,7 @@ function Menu() {
           onClick={clickLink}
         >
           <Link
-            to='/home'
+            to='/dashboard'
             className='flex flex-grow justify-between items-center w-full'
           >
             Home&ensp;

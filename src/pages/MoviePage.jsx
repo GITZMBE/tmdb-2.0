@@ -118,7 +118,7 @@ export const MoviePage = () => {
   }, [vote_count]);
 
   return movie && (
-    <div id='moreInfo'>
+    <div id='moviePoster'>
       <div className='w-full min-h-screen pb-4 bg-primary text-white space-y-4'>
         {/* <Banner topMovie={movie}> */}
           {/* <Trailer videoKey={videoInfo && videoInfo.key} className='hidden' /> */}

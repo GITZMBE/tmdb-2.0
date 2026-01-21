@@ -31,7 +31,7 @@ function Banner({ topMovie, children }) {
       className='relative w-full aspect-video min-h-[50vh] max-h-screen background-center'
     >
       {children}
-      <Link to={(topMovie && topMovie.id) ? `/moreInfo/${topMovie.id}` : '/'}>
+      <Link to={(topMovie && topMovie.id) ? `/movie/${topMovie.id}` : '/'}>
         <div
           id='filter'
           className='absolute top-0 left-0 bottom-0 right-0 text-white pt-[60px] pb-8 px-4 sm:px-12 w-full bg-gradient-to-r from-black from-30% opacity-90'

@@ -15,10 +15,10 @@ export const SeriesPage = () => {
   const [votes, setVotes] = useState(0);
   const [selectedSeason, setSelectedSeason] = useState(1);
   const [selectedEpisode, setSelectedEpisode] = useState(1);
+  const [season, setSeason] = useState(null);
 
+  let { title = '', overview = '', release_date = '', genre_ids = [], vote_count = 0, vote_average = 0 } = useMemo(() => series || {}, [series]);
   const streamUrl = "https://multiembed.mov/";
-
-  let { title, overview, release_date, genre_ids, vote_count, vote_average } = useMemo(() => series || { title: '', overview: '', release_date: '', genre_ids: [], vote_count: 0, vote_average: 0 }, [series]);
 
   const getPopularity = ( voteAverage = 1 ) => {return (voteAverage * 10).toString().substring(0, 2)};
 
@@ -37,23 +37,30 @@ export const SeriesPage = () => {
     setVotes(vote_count);
   }, [vote_count]);
 
-  let [season, setSeason] = useState(null);
+  
 
   useEffect(() => id && selectedSeason && fetchSeriesSeasonInfo(id, selectedSeason).then((season) => setSeason(season)), [id, selectedSeason]);
   let [showSeasonSelector, setShowSeasonSelector] = useState(false);
 
+  const videoUrl = useMemo(() => {
+    if (!series) return '';
+    return `${streamUrl}?video_id=${series.id}&tmdb=1&s=${selectedSeason}&e=${selectedEpisode}`;
+  }, [series, selectedSeason, selectedEpisode]);
+
   return series && (
-    <div id='moreInfo'>
+    <div id='seriesPoster'>
       <div className='w-full min-h-screen pb-4 bg-primary text-white space-y-4'>
         {/* <Banner topMovie={series}> */}
           {/* <Trailer videoKey={videoInfo && videoInfo.key} className='hidden' /> */}
-          <iframe
-            src={streamUrl + `?video_id=${series.id}&tmdb=1&s=${selectedSeason}&e=${selectedEpisode}`}
-            title={`Stream for ${title || series.title || `series-${series.id}`}`}
-            frameBorder="0"
-            className="w-full aspect-video"
-            allowFullScreen
-          />
+          {videoUrl && (
+            <iframe
+              src={videoUrl}
+              title={`Stream for ${title || series.title || `series-${series.id}`}`}
+              frameBorder="0"
+              className="w-full aspect-video"
+              allowFullScreen
+            />            
+          )}
         {/* </Banner> */}
         <div className='px-12 space-y-4'>
           <div className="w-full flex gap-4">
@@ -116,11 +123,11 @@ export const SeriesPage = () => {
                 )}
               </div>
               <div className="w-full">
-                {/* {season?.episodes?.map((episode) => (
+                {season?.episodes?.map((episode) => (
                   <button key={episode.episode_number} value={episode.episode_number} onClick={() => setSelectedEpisode(episode.episode_number)} className="w-full p-2 bg-tertiary">
                     Episode {episode.episode_number}
                   </button>
-                ))} */}
+                ))}
               </div>
             </div>
           </div>

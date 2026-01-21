@@ -1,6 +1,6 @@
 import Movies from "../components/Movies";
 
-export const Home = () => {
+export const Dashboard = () => {
   return (
     <div id='home'>
       <Movies />
@@ -8,4 +8,4 @@ export const Home = () => {
   );
 }
 
-export default Home;
+export default Dashboard;

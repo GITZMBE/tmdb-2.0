@@ -1,4 +1,4 @@
-export * from './Home';
+export * from './Dashboard';
 export * from './MoviePage';
 export * from './SeriesPage';
 export * from './Filter';
