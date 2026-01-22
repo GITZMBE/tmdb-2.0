@@ -1,8 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { AiOutlineArrowUp, AiOutlineArrowDown } from "react-icons/ai";
 import { fetchMovieInfo, fetchVideoKey } from "../api/fetch";
-import Trailer from "../components/Trailer";
-import Banner from "../components/Banner";
 import Related from "../components/Related";
 import { BsDot } from "react-icons/bs";
 import Credits from "../components/Credits";

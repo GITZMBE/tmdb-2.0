@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { openMenuState, openSearchState } from "../states";
+import { openMenuState, openSearchState } from "../../../states";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { AiFillHome } from "react-icons/ai";
 import { BsFilterSquare } from "react-icons/bs";

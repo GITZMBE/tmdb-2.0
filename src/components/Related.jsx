@@ -1,13 +1,15 @@
 import { useState, useEffect } from "react";
 import { fetchRelatedMovies, fetchRelatedSeries } from "../api/fetch";
-import Draggable from "./Draggable";
+import Draggable from "./ui/Draggable";
 import MoviePoster from "./MoviePoster";
 import SeriesPoster from "./SeriesPoster";
 
-function Related({ id, type = 'movie' }) {
+function Related({ id, type = "movie" }) {
   const [movies, setMovies] = useState({});
   useEffect(() => {
-    type === "movie" ? fetchRelatedMovies(id, setMovies) : fetchRelatedSeries(id, setMovies);
+    type === "movie"
+      ? fetchRelatedMovies(id, setMovies)
+      : fetchRelatedSeries(id, setMovies);
   }, [id]);
 
   return (
@@ -16,7 +18,13 @@ function Related({ id, type = 'movie' }) {
       <Draggable>
         <div className='flex gap-4'>
           {Object.keys(movies).length > 0
-            ? movies.map((movie) => type === "movie" ? <MoviePoster key={movie.id} movie={movie} /> : <SeriesPoster key={movie.id} series={movie} />)
+            ? movies.map((movie) =>
+                type === "movie" ? (
+                  <MoviePoster key={movie.id} movie={movie} />
+                ) : (
+                  <SeriesPoster key={movie.id} series={movie} />
+                ),
+              )
             : null}
         </div>
       </Draggable>

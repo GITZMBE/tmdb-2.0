@@ -2,11 +2,11 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { BiSearch } from "react-icons/bi";
 import { AiFillHome, AiOutlineMenu } from "react-icons/ai";
-import { fetchQuery } from "../api/fetch";
-import Poster from "./MoviePoster";
+import { fetchQuery } from "../../../api/fetch";
+import Poster from "../../ui/Poster";
 import Menu from "./Menu";
 import { useRecoilState } from "recoil";
-import { openMenuState, openSearchState } from "../states";
+import { openMenuState, openSearchState } from "../../../states";
 import Logo from "./Logo";
 import { BsFilterSquare } from "react-icons/bs";
 import { MdLocalMovies } from "react-icons/md";
@@ -168,14 +168,14 @@ export const Header = () => {
           id='movieSection'
           className='flex flex-wrap justify-center sm:justify-start items-start gap-4 pt-8 px-12 w-full max-w-[1408px]'
         >
-          {Object.keys(searchObject).length > 0
-            ? searchObject.map((movie) => (
+          {Object.keys(searchObject).length
+            ? searchObject.map(({ id, title, poster_path, release_date, vote_average }) => (
                 <div
-                  key={movie.id}
+                  key={id}
                   className='w-fit h-fit'
                   onClick={handleClickPoster}
                 >
-                  <Poster movie={movie} />
+                  <Poster id={id} type='movie' title={title} imagePath={poster_path} releaseDate={release_date} rating={vote_average} />
                 </div>
               ))
             : null}

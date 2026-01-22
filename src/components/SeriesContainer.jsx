@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import Draggable from "./Draggable";
+import Draggable from "./ui/Draggable";
 import SeriesPoster from "./SeriesPoster";
 
 function SeriesContainer({ title, fetchFunction }) {
@@ -14,7 +14,9 @@ function SeriesContainer({ title, fetchFunction }) {
       <Draggable>
         <div className='flex gap-4'>
           {Object.keys(series).length > 0
-            ? series.map((serie) => <SeriesPoster key={serie.id} series={serie} />)
+            ? series.map((serie) => (
+                <SeriesPoster key={serie.id} series={serie} />
+              ))
             : null}
         </div>
       </Draggable>

@@ -12,8 +12,6 @@ export const saveFavoritMovies = (movies) => {
 
 export const getFavoritMovies = () => {
   const favoritMovies = localStorage.getItem("favoritMovies");
-  if (!favoritMovies) {
-    return [];
-  }
+  if (!favoritMovies) return [];
   return JSON.parse(favoritMovies);
 };
