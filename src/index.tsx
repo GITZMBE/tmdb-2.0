@@ -5,7 +5,7 @@ import App from "./App";
 import { RecoilRoot } from "recoil";
 import { ToastContainer } from "./components/connectors/Toast/ToastContainer";
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
+const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 root.render(
   <React.StrictMode>
     <RecoilRoot>

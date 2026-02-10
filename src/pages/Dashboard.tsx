@@ -1,28 +1,29 @@
 import { useEffect, useState } from "react";
-import { fetchPopular, fetchTopMovie, fetchTopMovies, fetchTopSeries, fetchUpcoming, fetchVideoKey } from "../api/fetch";
+import { fetchPopular, fetchTopMovie, fetchTopMovies, fetchTopSeries, fetchUpcoming, fetchVideoKey } from "../api";
 import Banner from "../components/connectors/Banner";
 import { Trailer } from "../components";
 import Favorites from "../components/connectors/Lists/Favorites";
 import MoviesContainer from "../components/ui/MoviesContainer";
 import SeriesContainer from "../components/SeriesContainer";
+import { Movie } from "../models";
 
 export const Dashboard = () => {
-  const [bannerObject, setBannerObject] = useState(null);
-  const [videoInfo, setVideoInfo] = useState(null);
+  const [bannerObject, setBannerObject] = useState<Movie | null>(null);
+  const [videoInfo, setVideoInfo] = useState<{ key: string } | null>(null);
   useEffect(() => {
     fetchTopMovie(setBannerObject);
   }, []);
 
   useEffect(() => {
-    bannerObject
-      ? fetchVideoKey(bannerObject.id, setVideoInfo)
-      : setVideoInfo({});
+    if (!bannerObject || !bannerObject.id) return;
+
+    fetchVideoKey(bannerObject.id).then(setVideoInfo);
   }, [bannerObject]);
 
   return (
     <div
       id='dashboard'
-      className='flex flex-col pb-[60px] bg-primary min-h-screen'
+      className='flex flex-col pb-headerHeight bg-primary min-h-screen'
     >
       <Banner topMovie={bannerObject}>
         <Trailer

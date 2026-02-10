@@ -1,11 +1,11 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { AiOutlineArrowUp, AiOutlineArrowDown } from "react-icons/ai";
+import { AiOutlineArrowUp, AiOutlineArrowDown, AiFillPlayCircle } from "react-icons/ai";
 import { fetchMovieInfo, fetchVideoKey } from "../api/fetch";
 import Related from "../components/Related";
 import { BsDot } from "react-icons/bs";
 import Credits from "../components/Credits";
-import Reviews from "../components/Reviews";
-import { useParams } from "react-router-dom";
+// import Reviews from "../components/Reviews";
+import { Link, useParams } from "react-router-dom";
 
 const genresData = [
   {
@@ -94,6 +94,7 @@ export const MoviePage = () => {
   const [votes, setVotes] = useState(0);
 
   const streamUrl = "https://multiembed.mov/";
+  const externalStreamUrl = "https://getsuperembed.link";
 
   let { title, overview, release_date, genre_ids, vote_count, vote_average } = useMemo(() => movie || { title: '', overview: '', release_date: '', genre_ids: [], vote_count: 0, vote_average: 0 }, [movie]);
 
@@ -129,7 +130,22 @@ export const MoviePage = () => {
           />
         {/* </Banner> */}
         <div className='px-12 space-y-4'>
-          <h1 className='text-3xl font-bold'>{title}</h1>
+          <div className="flex items-end gap-2">
+            <h1 className='text-3xl font-bold'>{title}</h1>
+            <Link
+              // to={externalStreamUrl + `?video_id=${id}&tmdb=1`}
+              to={`/movie/${id}/redirect`}
+              target='_blank'
+              rel='noreferrer'
+              onClick={(e) => e.stopPropagation()}
+              className="flex items-center gap-2 w-fit text-lg font-semibold px-3 py-1 rounded-full bg-secondary text-white"
+            >
+              <span>Play</span>
+              <AiFillPlayCircle
+                size={32}
+              />
+            </Link>            
+          </div>
           <div>
             <h2 className='text-xl font-bold'>Genres</h2>
             <p className='flex gap-2'>
@@ -149,7 +165,7 @@ export const MoviePage = () => {
             <h2 className='text-xl font-bold'>Release Date</h2>
             <p>{release_date}</p>
           </div>
-          <div className='flex items-center gap-4'>
+          {/* <div className='flex items-center gap-4'>
             <h2 className='text-xl font-bold'>Votes: </h2>
             <div className='space-y-2'>
               <AiOutlineArrowUp
@@ -162,7 +178,7 @@ export const MoviePage = () => {
                 onClick={() => setVotes(votes - 1)}
               />
             </div>
-          </div>
+          </div> */}
           <div className='relative flex w-full h-12 border-white border-2'>
             <div style={{ width: `${getPopularity(vote_average)}%` }} className='bg-green-500 h-full'></div>
             <p className='absolute w-full text-center leading-[48px] tracking-[16px]'>
@@ -170,7 +186,7 @@ export const MoviePage = () => {
             </p>
           </div>
           <Credits id={id} />
-          <Reviews id={id} />
+          {/* <Reviews id={id} /> */}
           <Related id={id} />
         </div>
       </div>

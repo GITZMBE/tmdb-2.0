@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { fetchFilter, fetchGenres, fetchTranslations } from "../api/fetch";
-import Poster from "../components/MoviePoster";
+import { fetchFilter, fetchGenres, fetchTranslations } from "../api/fetch.js";
+import Poster from "../components/ui/Poster.tsx";
 import { BsFilterSquare } from "react-icons/bs";
+import type { Filter as IFilter, Genre } from "../models";
 
-const genresData = [
+const genresData: Genre[] = [
   {
     id: 28,
     name: "Action",
@@ -229,13 +230,13 @@ const yearsData = Array.from(
 );
 
 export const Filter = () => {
-  const defaultData = {
+  const defaultData: IFilter = {
     genre: "28",
     pages: 1,
     locale: "en-US",
     year: new Date().getFullYear(),
   };
-  const [formData, setFormData] = useState(defaultData);
+  const [formData, setFormData] = useState<IFilter>(defaultData);
   const optionsData = {
     genres: genresData,
     locales: localesData,
@@ -266,8 +267,8 @@ export const Filter = () => {
   }, [formData]);
 
   return (
-    <div id='filter' className='pt-[92px] sm:pt-headerHeight bg-primary'>
-      <div className='px-12 min-h-[100vh]'>
+    <div id='filter' className='pt-23 sm:pt-headerHeight bg-primary'>
+      <div className='px-12 min-h-screen'>
         <div className='flex flex-wrap gap-4 w-full pt-8 sm:pt-16 pb-4'>
           <select
             name=''
@@ -296,7 +297,7 @@ export const Filter = () => {
             max={2000}
             value={formData.pages}
             onChange={(e) =>
-              setFormData((prev) => ({ ...prev, pages: e.target.value }))
+              setFormData((prev) => ({ ...prev, pages: +e.target.value }))
             }
           />
           <select
@@ -323,7 +324,7 @@ export const Filter = () => {
             defaultValue={new Date().getFullYear()}
             className='bg-secondary text-tertiary hide-scrollbar cursor-pointer'
             onChange={(e) =>
-              setFormData((prev) => ({ ...prev, year: e.target.value }))
+              setFormData((prev) => ({ ...prev, year: +e.target.value }))
             }
           >
             <option value='' className='text-gray-500'>
@@ -347,7 +348,7 @@ export const Filter = () => {
         </div>
         <div className='flex flex-wrap justify-center sm:justify-start gap-4 w-full py-4'>
           {Object.keys(movies).length > 0
-            ? movies.map((movie, index) => <Poster key={index} movie={movie} />)
+            ? movies.map(({ id, title, poster_path, release_date, vote_average }) => <Poster key={id} id={id} type='movie' title={title} imagePath={poster_path} releaseDate={release_date} rating={vote_average} />)
             : null}
         </div>
       </div>

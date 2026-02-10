@@ -7,9 +7,11 @@ export const Genre = () => {
   const { id } = useParams();
   const [page, setPage] = useState(1);
   const [movies, setMovies] = useState([]);
+
   useEffect(() => {
     fetchMoviesByGenre(setMovies, id, page);
   }, [id, page]);
+  
   return movies && movies.results ? (
     <div id='genre' className='py-4 text-white'>
       <div className='min-w-screen py-4'>

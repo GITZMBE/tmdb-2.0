@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { BiSearch } from "react-icons/bi";
 import { AiFillHome, AiOutlineMenu } from "react-icons/ai";
-import { fetchQuery } from "../../../api/fetch";
+import { fetchQuery } from "../../../api";
 import Poster from "../../ui/Poster";
 import Menu from "./Menu";
 import { useRecoilState } from "recoil";
@@ -19,9 +19,9 @@ export const Header = () => {
   };
   const [backgroundOpacity, setBackgroundOpacity] = useState(1);
   useEffect(() => {
-    const searchBar = document.getElementById("searchBar");
-    const header = document.getElementById("header");
-    const movieSection = document.getElementById("movieSection");
+    const searchBar: HTMLElement = document.getElementById("searchBar") as HTMLElement;
+    const header: HTMLElement = document.getElementById("header") as HTMLElement;
+    const movieSection: HTMLElement = document.getElementById("movieSection") as HTMLElement;
     if (openSearch) {
       searchBar.classList.remove("w-0");
       searchBar.classList.add("w-full", "px-2");
@@ -48,11 +48,11 @@ export const Header = () => {
     setSearch("");
     setSearchObject({});
   };
-  const onSearch = (e) => {
+  const onSearch = (e: any) => {
     setSearch(e.target.value);
   };
 
-  const handleKeyPress = (e) => {
+  const handleKeyPress = (e: any) => {
     if (e.key === "Enter") {
       fetchQuery(search, setSearchObject);
     }
@@ -87,11 +87,11 @@ export const Header = () => {
   return (
     <header
       id='header'
-      className='sticky top-0 z-30 flex flex-col justify-start w-full h-[92px] sm:h-[60px] overflow-y-hidden'
+      className='sticky top-0 z-30 flex flex-col justify-start w-full h-23 sm:h-headerHeight overflow-y-hidden'
       style={{ backgroundColor: `rgb(13, 28, 40, ${backgroundOpacity})` }}
     >
       <div
-        className='flex flex-col items-center sm:flex-row sm:justify-between sm:items-center gap-4 w-full max-h-[92px] sm:h-headerHeight px-4 sm:px-12 z-20'
+        className='flex flex-col items-center sm:flex-row sm:justify-between sm:items-center gap-4 w-full max-h-23 sm:h-headerHeight px-4 sm:px-12 z-20'
         style={{ backgroundColor: `rgb(13, 28, 40, ${backgroundOpacity})` }}
       >
         <Link
@@ -166,7 +166,7 @@ export const Header = () => {
       >
         <div
           id='movieSection'
-          className='flex flex-wrap justify-center sm:justify-start items-start gap-4 pt-8 px-12 w-full max-w-[1408px]'
+          className='flex flex-wrap justify-center sm:justify-start items-start gap-4 pt-8 px-12 w-full max-w-352'
         >
           {Object.keys(searchObject).length
             ? searchObject.map(({ id, title, poster_path, release_date, vote_average }) => (

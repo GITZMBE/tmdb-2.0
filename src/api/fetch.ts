@@ -1,7 +1,9 @@
+import { VideoType } from "../models";
+
 const AUTHENTICATION_KEY = process.env.REACT_APP_AUTHENTICATION_KEY;
 const API_KEY = process.env.REACT_APP_API_KEY;
 
-export const fetchMovieInfo = async (id) => {
+export const fetchMovieInfo = async (id: number) => {
   const url = `https://api.themoviedb.org/3/movie/${id}`;
   const options = {
     method: "GET",
@@ -15,7 +17,7 @@ export const fetchMovieInfo = async (id) => {
   return results;
 };
 
-export const fetchSeriesInfo = async (id) => {
+export const fetchSeriesInfo = async (id: string) => {
   const url = `https://api.themoviedb.org/3/tv/${id}`;
   const options = {
     method: "GET",
@@ -29,7 +31,7 @@ export const fetchSeriesInfo = async (id) => {
   return results;
 };
 
-export const fetchTopMovies = async (callback) => {
+export const fetchTopMovies = async (callback: (_: any) => void) => {
   const url = "https://api.themoviedb.org/3/movie/top_rated";
   const options = {
     method: "GET",
@@ -44,7 +46,7 @@ export const fetchTopMovies = async (callback) => {
   callback(movies);
 };
 
-export const fetchTopMovie = async (callback) => {
+export const fetchTopMovie = async (callback: (_: any) => void) => {
   const url = "https://api.themoviedb.org/3/movie/top_rated";
   const options = {
     method: "GET",
@@ -60,7 +62,7 @@ export const fetchTopMovie = async (callback) => {
   callback(topMovie);
 };
 
-export const fetchTopSeries = async (callback) => {
+export const fetchTopSeries = async (callback: (_: any) => void) => {
   const url = "https://api.themoviedb.org/3/tv/top_rated";
   const options = {
     method: "GET",
@@ -75,7 +77,7 @@ export const fetchTopSeries = async (callback) => {
   callback(series);
 };
 
-export const fetchVideoKey = async (id) => {
+export const fetchVideoKey = async (id: number) => {
   const url = `https://api.themoviedb.org/3/movie/${id}/videos?language=en-US`;
   const options = {
     method: "GET",
@@ -89,7 +91,7 @@ export const fetchVideoKey = async (id) => {
   return results.results[0];
 };
 
-export const fetchPopular = async (callback) => {
+export const fetchPopular = async (callback: (_: any) => void) => {
   const url =
     "https://api.themoviedb.org/3/movie/popular?language=en-US&page=1";
   const options = {
@@ -105,7 +107,7 @@ export const fetchPopular = async (callback) => {
   callback(data);
 };
 
-export const fetchQuery = async (query, callback) => {
+export const fetchQuery = async (query: string, callback: (_: any) => void) => {
   const url = `https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${query}`;
   const options = {
     method: "GET",
@@ -120,7 +122,7 @@ export const fetchQuery = async (query, callback) => {
   callback(movies);
 };
 
-export const fetchUpcoming = async (callback) => {
+export const fetchUpcoming = async (callback: (_: any) => void) => {
   const url =
     "https://api.themoviedb.org/3/movie/upcoming?language=en-US&page=1";
   const options = {
@@ -136,7 +138,7 @@ export const fetchUpcoming = async (callback) => {
   callback(movies);
 };
 
-export const fetchRelatedMovies = async (id, callback) => {
+export const fetchRelatedMovies = async (id: number, callback: (_: any) => void) => {
   const url = `https://api.themoviedb.org/3/movie/${id}/similar?language=en-US&page=1`;
   const options = {
     method: "GET",
@@ -151,7 +153,7 @@ export const fetchRelatedMovies = async (id, callback) => {
   callback(movies);
 };
 
-export const fetchRelatedSeries = async (id, callback) => {
+export const fetchRelatedSeries = async (id: number, callback: (_: any) => void) => {
   const url = `https://api.themoviedb.org/3/tv/${id}/similar?language=en-US&page=1`;
   const options = {
     method: "GET",
@@ -183,7 +185,7 @@ export const fetchGenres = async () => {
   return genres;
 };
 
-export const fetchProviders = async (callback) => {
+export const fetchProviders = async (callback: (_: any) => void) => {
   const url =
     "https://api.themoviedb.org/3/watch/providers/movie?language=en-US";
   const options = {
@@ -199,7 +201,7 @@ export const fetchProviders = async (callback) => {
   callback(data);
 };
 
-export const fetchMovieCredits = async (id, callback) => {
+export const fetchMovieCredits = async (id: number, callback: (_: any) => void) => {
   const url = `https://api.themoviedb.org/3/movie/${id}/credits?language=en-US`;
   const options = {
     method: "GET",
@@ -214,7 +216,7 @@ export const fetchMovieCredits = async (id, callback) => {
   callback(cast);
 };
 
-export const fetchSeriesCredits = async (id, callback) => {
+export const fetchSeriesCredits = async (id: number, callback: (_: any) => void) => {
   const url = `https://api.themoviedb.org/3/tv/${id}/credits?language=en-US`;
   const options = {
     method: "GET",
@@ -229,7 +231,7 @@ export const fetchSeriesCredits = async (id, callback) => {
   callback(cast);
 };
 
-export const fetchReviews = async (id, callback) => {
+export const fetchReviews = async (id: number, callback: (_: any) => void) => {
   const url = `https://api.themoviedb.org/3/movie/${id}/reviews?language=en-US&page=1`;
   const options = {
     method: "GET",
@@ -244,7 +246,7 @@ export const fetchReviews = async (id, callback) => {
   callback(reviews);
 };
 
-export const fetchSeriesReviews = async (id, callback) => {
+export const fetchSeriesReviews = async (id: number, callback: (_: any) => void) => {
   const url = `https://api.themoviedb.org/3/tv/${id}/reviews?language=en-US&page=1`;
   const options = {
     method: "GET",
@@ -260,11 +262,11 @@ export const fetchSeriesReviews = async (id, callback) => {
 };
 
 export const fetchFilter = async (
-  genreId,
-  page,
-  translation,
-  year,
-  callback
+  genreId: string,
+  page: number,
+  translation: string,
+  year: number,
+  callback: (_: any) => void
 ) => {
   const url = `https://api.themoviedb.org/3/discover/movie?with_genres=${genreId}&page=${page}&language=${translation}&primary_release_year=${year}`;
   const options = {
@@ -280,7 +282,7 @@ export const fetchFilter = async (
   callback(movies);
 };
 
-export const fetchTranslations = async (callback) => {
+export const fetchTranslations = async (callback: (_: any) => void) => {
   const url = "https://api.themoviedb.org/3/configuration/primary_translations";
   const options = {
     method: "GET",
@@ -294,7 +296,7 @@ export const fetchTranslations = async (callback) => {
   callback(results);
 };
 
-export const fetchLanguages = async (callback) => {
+export const fetchLanguages = async (callback: (_: any) => void) => {
   const url = "https://api.themoviedb.org/3/configuration/languages";
   const options = {
     method: "GET",
@@ -308,7 +310,7 @@ export const fetchLanguages = async (callback) => {
   callback(results);
 };
 
-export const fetchCountries = async (callback) => {
+export const fetchCountries = async (callback: (_: any) => void) => {
   const url = "https://api.themoviedb.org/3/configuration/countries";
   const options = {
     method: "GET",
@@ -322,7 +324,7 @@ export const fetchCountries = async (callback) => {
   callback(results);
 };
 
-export const fetchMoviesByGenre = async (callback, id, page) => {
+export const fetchMoviesByGenre = async (callback: (_: any) => void, id: number, page: number) => {
   const url = `https://api.themoviedb.org/3/discover/movie?with_genres=${id}&page=${page}`;
   const options = {
     method: "GET",
@@ -336,7 +338,7 @@ export const fetchMoviesByGenre = async (callback, id, page) => {
   callback(results);
 };
 
-export const fetchSeriesSeasonInfo = async (seriesId, seasonNumber) => {
+export const fetchSeriesSeasonInfo = async (seriesId: number, seasonNumber: number) => {
   const url = `https://api.themoviedb.org/3/tv/${seriesId}/season/${seasonNumber}`;
   const options = {
     method: "GET",
@@ -348,4 +350,20 @@ export const fetchSeriesSeasonInfo = async (seriesId, seasonNumber) => {
   const response = await fetch(url, options);
   const results = await response.json();
   return results;
+};
+
+export const fetchLogo = async (id: string, type: VideoType = "movie") => {
+  const url = `https://api.themoviedb.org/3/${type === "movie" ? "movie" : "tv"}/${id}/images?include_image_language=en-US&language=en`;
+  const options = {
+    method: "GET",
+    headers: {
+      accept: "application/json",
+      Authorization: `Bearer ${AUTHENTICATION_KEY}`,
+    },
+  };
+  const response = await fetch(url, options);
+  const results = await response.json();
+  const logos = results.logos;
+  const logo = logos?.[0];
+  return logo;
 };

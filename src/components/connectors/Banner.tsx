@@ -2,14 +2,18 @@ import React, { useEffect, useState } from "react";
 import { AiFillPlayCircle } from "react-icons/ai";
 import { BsDot } from "react-icons/bs";
 import { Link } from "react-router-dom";
-import { fetchGenres } from "../../api/fetch";
+import { fetchGenres, fetchLogo } from "../../api/fetch";
 import { getYear, twoDigitRating } from "../../utils";
 
 function Banner({ topMovie, children }) {
   const [genresList, setGenresList] = useState([]);
+  const [logo, setLogo] = useState(null);
   useEffect(() => {
     fetchGenres(setGenresList);
   }, []);
+  useEffect(() => {
+    topMovie && fetchLogo(topMovie.id, 'movie').then((data) => setLogo(data));
+  }, [topMovie]);
 
   // const { vote_average, release_date, ...rest } = topMovie || { backdrop_path: '', title: '', vote_average: '', release_date: '', overview: '', genre_ids: [] };
   // const movie = { vote_average: twoDigitRating(topMovie.vote_average * 10), release_date: getYear(topMovie.release_date), ...rest };
@@ -44,10 +48,18 @@ function Banner({ topMovie, children }) {
         >
           <div className='hidden xs:flex flex-col justify-center gap-2  md:w-3/5 lg:w-2/5 h-full'>
             <div id='title-container' className='flex items-center gap-4 py-2'>
-              <h1 className='text-3xl sm:text-5xl font-bold'>{title}</h1>
-              {topMovie && topMovie?.id && (
-                <a
-                  href={streamUrl + `?video_id=${topMovie.id}&tmdb=1`}
+              {/* <h1 className='text-3xl sm:text-5xl font-bold'>{title}</h1> */}
+              {logo?.file_path && (
+                <img
+                  src={baseUrl + logo.file_path}
+                  alt={title}
+                  className='w-64 rounded'
+                  style={{ aspect: logo.aspect_ratio }}
+                />
+              )}
+              {/* {topMovie && topMovie?.id && (
+                <Link
+                  to={streamUrl + `?video_id=${topMovie.id}&tmdb=1`}
                   target='_blank'
                   rel='noreferrer'
                   onClick={(e) => e.stopPropagation()}
@@ -56,8 +68,8 @@ function Banner({ topMovie, children }) {
                     size={36}
                     className='text-secondary min-w-[36px]'
                   />
-                </a>
-              )}
+                </Link>
+              )} */}
             </div>
             <p className='space-x-2 font-bold text-white text-sm uppercase'>
               <span className='px-1 sm:px-2 py-[2px] sm:py-1 text-sm sm:text-base rounded bg-green-600'>

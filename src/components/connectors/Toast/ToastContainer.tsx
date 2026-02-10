@@ -1,12 +1,11 @@
 import { useRecoilState } from "recoil";
 import { toastState } from "../../../states";
 import ToastItem from "./ToastItem";
-// import "./toast.css";
 
 export const ToastContainer = () => {
   const [toasts, setToasts] = useRecoilState(toastState);
 
-  const removeToast = (id) => {
+  const removeToast = (id: number) => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
   };
 

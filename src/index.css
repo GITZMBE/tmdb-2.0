@@ -1,61 +1,64 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-@import './styles/toast.css';
+@import "tailwindcss";
 
-@layer base {
-  * {
-    @apply m-0 p-0 box-border;
-  }
+@theme {
+  --breakpoint-xs: 480px;
 
-  :root {
-    --primary: "#0D1C28";
-    --secondary: "#173248";
-    --tertiary: "#F5F9FC";
-    --quaternary: "#418EC6";
-  }
+  --spacing-headerHeight: 60px;
+  --spacing-posterWidth: 150px;
 
-  body, html {
-    @apply scroll-smooth;
-  }
+  --color-primary: #0D1C28;
+  --color-secondary: #173248;
+  --color-tertiary: #F5F9FC;
+  --color-quaternary: #418EC6;
 
-  body::-webkit-scrollbar, html::-webkit-scrollbar {
-    @apply w-0 xs:w-4
+  --aspect-poster: 2 / 3;
+
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
   }
 
-  ::-webkit-scrollbar {
-    @apply w-[12px];
-  }
-  
-  ::-webkit-scrollbar-track {
-    @apply bg-black;
+  @keyframes fade-out {
+    from { opacity: 1; }
+    to { opacity: 0; }
   }
 
-  ::-webkit-scrollbar-thumb {
-    @apply bg-secondary;
-  }  
-}
-
-@layer components {
-  .transitioning {
-    @apply transition-all duration-100 ease-in-out;
+  @keyframes show-details {
+    from { width: 0; padding: 0; }
+    to {
+      width: 182px;
+      padding-left: 16px;
+      padding-right: 16px;
+      padding-top: 8px;
+      padding-bottom: 8px;
+    }
   }
 
-  .background-center {
-    @apply bg-center bg-cover;
+  @keyframes hide-details {
+    from {
+      width: 182px;
+      padding-left: 16px;
+      padding-right: 16px;
+      padding-top: 8px;
+      padding-bottom: 8px;
+    }
+    to { width: 0; padding: 0; }
   }
 
-  .image-center {
-    @apply object-center object-cover;
+  @keyframes show-menu {
+    from { width: 0; }
+    to { width: 100vw; padding-left: 1rem; padding-right: 1rem; }
   }
-}
 
-@layer utilities {
-  .hide-scrollbar::-webkit-scrollbar {
-    @apply hidden;
+  @keyframes hide-menu {
+    from { width: 100vw; }
+    to { width: 0; padding-left: 0; padding-right: 0; }
   }
-  .input-number-btn-none::-webkit-inner-spin-button,
-  .input-number-btn-none::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-  }
+
+  --animate-fade-in: fade-in 1s ease-in-out forwards 3s;
+  --animate-fade-out: fade-out 1s ease-in-out forwards 3s;
+  --animate-show-details: show-details 100ms ease-in-out forwards 300ms;
+  --animate-hide-details: hide-details ease-in-out forwards;
+  --animate-show-menu: show-menu ease-in-out forwards 100ms;
+  --animate-hide-menu: hide-menu ease-in-out forwards 100ms;
 }
