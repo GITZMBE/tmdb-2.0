@@ -3,13 +3,14 @@ import { Link } from "react-router-dom";
 import { BiSearch } from "react-icons/bi";
 import { AiFillHome, AiOutlineMenu } from "react-icons/ai";
 import { fetchQuery } from "../../../api";
-import Poster from "../../ui/Poster";
-import Menu from "./Menu";
 import { useRecoilState } from "recoil";
 import { openMenuState, openSearchState } from "../../../states";
-import Logo from "./Logo";
 import { BsFilterSquare } from "react-icons/bs";
 import { MdLocalMovies } from "react-icons/md";
+import Logo from "./Logo";
+import Menu from "./Menu";
+import { Video } from "../../../models";
+import Poster from "../../ui/Poster";
 
 export const Header = () => {
   const [openSearch, setOpenSearch] = useRecoilState(openSearchState);
@@ -35,18 +36,18 @@ export const Header = () => {
       searchBar.classList.add("w-0");
       searchBar.classList.remove("w-full", "px-2");
       searchBar.blur();
-      setSearchObject([]);
+      setSearchResult([]);
       header.classList.remove("h-screen", "min-h-screen", "items-start");
       header.classList.add("sm:max-h-[60px]", "items-center");
       movieSection.classList.remove("h-full", "py-4");
     }
   }, [openSearch, setMenuOpen]);
-  const [searchObject, setSearchObject] = useState({});
+  const [searchResult, setSearchResult] = useState<Video[]>([]);
   const [search, setSearch] = useState("");
   const handleClick = () => {
     setOpenSearch(!openSearch);
     setSearch("");
-    setSearchObject({});
+    setSearchResult([]);
   };
   const onSearch = (e: any) => {
     setSearch(e.target.value);
@@ -54,7 +55,7 @@ export const Header = () => {
 
   const handleKeyPress = (e: any) => {
     if (e.key === "Enter") {
-      fetchQuery(search, setSearchObject);
+      fetchQuery(search).then(setSearchResult);
     }
   };
   const handleClickPoster = () => {
@@ -168,14 +169,14 @@ export const Header = () => {
           id='movieSection'
           className='flex flex-wrap justify-center sm:justify-start items-start gap-4 pt-8 px-12 w-full max-w-352'
         >
-          {Object.keys(searchObject).length
-            ? searchObject.map(({ id, title, poster_path, release_date, vote_average }) => (
+          {searchResult.length
+            ? searchResult.map(({ id, type, title, description, posterPath, backdropPath, releaseDate, rating, genreIds }) => (
                 <div
                   key={id}
                   className='w-fit h-fit'
                   onClick={handleClickPoster}
                 >
-                  <Poster id={id} type='movie' title={title} imagePath={poster_path} releaseDate={release_date} rating={vote_average} />
+                  <Poster id={id} type={type} title={title} description={description} posterPath={posterPath} backdropPath={backdropPath} releaseDate={releaseDate} rating={rating} genreIds={genreIds} />
                 </div>
               ))
             : null}

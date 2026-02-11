@@ -1,7 +1,12 @@
-import React, { useState } from "react";
+import React, { HTMLAttributes, useState } from "react";
 import YouTube from "react-youtube";
+import { twJoin } from "tailwind-merge";
 
-export function Trailer({ videoKey }) {
+interface Props extends HTMLAttributes<HTMLDivElement> {
+  videoKey: string;
+}
+
+export function Trailer({ videoKey, className, ...rest }: Props) {
   const [videoStyle, setVideoStyle] = useState("");
   const handleEnd = () => {
     setVideoStyle("animate-fade-out");
@@ -27,11 +32,12 @@ export function Trailer({ videoKey }) {
   return (
     <YouTube
       id='trailer'
-      className={`absolute top-0 bottom-0 left-0 right-0 w-full h-full opacity-0 ${videoStyle}`}
+      className={twJoin("absolute top-0 bottom-0 left-0 right-0 w-full h-full opacity-0", className, videoStyle)}
       videoId={videoKey}
       opts={opts}
       onEnd={handleEnd}
       onPlay={handlePlay}
+      {...rest}
     />
   );
 }

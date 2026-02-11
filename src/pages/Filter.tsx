@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { fetchFilter, fetchGenres, fetchTranslations } from "../api/fetch.js";
-import Poster from "../components/ui/Poster.tsx";
+import Poster from "../components/ui/Poster.jsx";
 import { BsFilterSquare } from "react-icons/bs";
 import type { Filter as IFilter, Genre } from "../models";
 

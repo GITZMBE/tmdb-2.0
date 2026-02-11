@@ -1,36 +1,41 @@
 import React, { useEffect, useState } from "react";
-import { AiFillPlayCircle } from "react-icons/ai";
+// import { AiFillPlayCircle } from "react-icons/ai";
 import { BsDot } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import { fetchGenres, fetchLogo } from "../../api/fetch";
 import { getYear, twoDigitRating } from "../../utils";
+import { Genre, Logo, Video } from "../../models";
 
-function Banner({ topMovie, children }) {
-  const [genresList, setGenresList] = useState([]);
-  const [logo, setLogo] = useState(null);
+interface Props {
+  topVideo: Video ;
+  children?: React.ReactNode;
+}
+
+function Banner({ topVideo, children }: Props) {
+  const [genresList, setGenresList] = useState<Genre[]>([]);
+  const [logo, setLogo] = useState<Logo | null>(null);
   useEffect(() => {
-    fetchGenres(setGenresList);
+    fetchGenres().then(setGenresList);
   }, []);
   useEffect(() => {
-    topMovie && fetchLogo(topMovie.id, 'movie').then((data) => setLogo(data));
-  }, [topMovie]);
+    fetchLogo(topVideo.id, 'movie').then(setLogo);
+  }, [topVideo]);
 
-  // const { vote_average, release_date, ...rest } = topMovie || { backdrop_path: '', title: '', vote_average: '', release_date: '', overview: '', genre_ids: [] };
-  // const movie = { vote_average: twoDigitRating(topMovie.vote_average * 10), release_date: getYear(topMovie.release_date), ...rest };
+  // const { vote_average, release_date, ...rest } = topVideo || { backdrop_path: '', title: '', vote_average: '', release_date: '', overview: '', genre_ids: [] };
+  // const movie = { vote_average: twoDigitRating(topVideo.vote_average * 10), release_date: getYear(topVideo.release_date), ...rest };
   // const { backdrop_path, title, vote_average, release_date, overview, genre_ids } = movie;
 
   const baseUrl = "https://image.tmdb.org/t/p/w1280";
   const streamUrl = "https://multiembed.mov/";
-  const url = topMovie && topMovie.backdrop_path ? topMovie.backdrop_path : "";
-  const title = topMovie && topMovie.title ? topMovie.title : "";
+  const url = topVideo.backdropPath ?? "";
+  const title = topVideo && topVideo.title ? topVideo.title : "";
   const rating = twoDigitRating(
-    topMovie && topMovie.vote_average ? topMovie.vote_average * 10 : "",
+    topVideo && topVideo.rating ? topVideo.rating * 10 : 0,
   );
   const releaseDate = getYear(
-    topMovie && topMovie.release_date ? topMovie.release_date : "",
+    topVideo && topVideo.releaseDate ? topVideo.releaseDate : "",
   );
-  const synopsis = topMovie && topMovie.overview ? topMovie.overview : "";
-  const genreIds = topMovie && topMovie.genre_ids ? topMovie.genre_ids : [];
+  const { description: synopsis = '', genreIds = [] } = topVideo;
 
   return (
     <div
@@ -41,25 +46,25 @@ function Banner({ topMovie, children }) {
       className='relative w-full aspect-video min-h-[50vh] max-h-screen background-center'
     >
       {children}
-      <Link to={topMovie && topMovie.id ? `/movie/${topMovie.id}` : "/"}>
+      <Link to={topVideo && topVideo.id ? `/movie/${topVideo.id}` : "/"}>
         <div
           id='filter'
-          className='absolute top-0 left-0 bottom-0 right-0 text-white pt-[60px] pb-8 px-4 sm:px-12 w-full bg-gradient-to-r from-black from-30% opacity-90'
+          className='absolute top-0 left-0 bottom-0 right-0 text-white pt-headerHeight pb-8 px-4 sm:px-12 w-full bg-linear-to-r from-black from-30% opacity-90'
         >
           <div className='hidden xs:flex flex-col justify-center gap-2  md:w-3/5 lg:w-2/5 h-full'>
             <div id='title-container' className='flex items-center gap-4 py-2'>
               {/* <h1 className='text-3xl sm:text-5xl font-bold'>{title}</h1> */}
-              {logo?.file_path && (
+              {logo?.filePath && (
                 <img
-                  src={baseUrl + logo.file_path}
+                  src={baseUrl + logo.filePath}
                   alt={title}
                   className='w-64 rounded'
-                  style={{ aspect: logo.aspect_ratio }}
+                  style={{ aspectRatio: logo.aspectRatio }}
                 />
               )}
-              {/* {topMovie && topMovie?.id && (
+              {/* {topVideo && topVideo?.id && (
                 <Link
-                  to={streamUrl + `?video_id=${topMovie.id}&tmdb=1`}
+                  to={streamUrl + `?video_id=${topVideo.id}&tmdb=1`}
                   target='_blank'
                   rel='noreferrer'
                   onClick={(e) => e.stopPropagation()}

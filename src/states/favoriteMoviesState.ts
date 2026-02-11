@@ -1,7 +1,7 @@
 import { atom } from "recoil";
-import type { Favorite } from "../models";
+import type { Video } from "../models";
 
-export const FavoriteMoviesState = atom<Favorite[]>({
+export const FavoriteMoviesState = atom<Video[]>({
   key: "favoriteMovies",
   default: [],
 });

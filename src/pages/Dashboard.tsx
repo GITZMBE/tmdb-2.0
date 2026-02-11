@@ -1,17 +1,22 @@
 import { useEffect, useState } from "react";
-import { fetchPopular, fetchTopMovie, fetchTopMovies, fetchTopSeries, fetchUpcoming, fetchVideoKey } from "../api";
+import {
+  fetchPopular,
+  fetchTopVideo,
+  fetchTopVideos,
+  fetchUpcoming,
+  fetchVideoKey,
+} from "../api";
 import Banner from "../components/connectors/Banner";
-import { Trailer } from "../components";
+import VideosContainer from "../components/ui/VideosContainer";
+import { Video } from "../models";
+import Trailer from "../components/Trailer";
 import Favorites from "../components/connectors/Lists/Favorites";
-import MoviesContainer from "../components/ui/MoviesContainer";
-import SeriesContainer from "../components/SeriesContainer";
-import { Movie } from "../models";
 
 export const Dashboard = () => {
-  const [bannerObject, setBannerObject] = useState<Movie | null>(null);
+  const [bannerObject, setBannerObject] = useState<Video | null>(null);
   const [videoInfo, setVideoInfo] = useState<{ key: string } | null>(null);
   useEffect(() => {
-    fetchTopMovie(setBannerObject);
+    fetchTopVideo().then(setBannerObject);
   }, []);
 
   useEffect(() => {
@@ -25,23 +30,20 @@ export const Dashboard = () => {
       id='dashboard'
       className='flex flex-col pb-headerHeight bg-primary min-h-screen'
     >
-      <Banner topMovie={bannerObject}>
-        <Trailer
-          videoKey={
-            videoInfo && videoInfo.key !== null ? videoInfo.key : undefined
-          }
-          className='hidden'
-        />
-      </Banner>
+      {bannerObject && (
+        <Banner topVideo={bannerObject}>
+          {videoInfo?.key && <Trailer videoKey={videoInfo.key} className='hidden' />}
+        </Banner>        
+      )}
       <main className='w-full text-white'>
         <Favorites />
-        <MoviesContainer title='Top Rated' fetchFunction={fetchTopMovies} />
-        <MoviesContainer title='Popular' fetchFunction={fetchPopular} />
-        <MoviesContainer title='Upcoming' fetchFunction={fetchUpcoming} />
-        <SeriesContainer title='Top Series' fetchFunction={fetchTopSeries} />
+        <VideosContainer title='Top Rated' fetchFunction={fetchTopVideos} />
+        <VideosContainer title='Popular' fetchFunction={fetchPopular} />
+        <VideosContainer title='Upcoming' fetchFunction={fetchUpcoming} />
+        <VideosContainer title='Top Series' fetchFunction={async () => await fetchTopVideos('series')} />
       </main>
     </div>
   );
-}
+};
 
 export default Dashboard;

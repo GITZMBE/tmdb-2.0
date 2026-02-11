@@ -1,12 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { fetchReviews, fetchSeriesReviews } from "../api/fetch";
+import { fetchReviews } from "../api/fetch";
+import { Review, VideoType } from "../models";
 import { splitReviewsDate } from "../utils";
 
-function Reviews({ id, type = 'movie' }) {
-  const [reviews, setReviews] = useState([]);
+interface Props {
+  id: number;
+  type?: VideoType;
+}
+
+function Reviews({ id, type = 'movie' }: Props) {
+  const [reviews, setReviews] = useState<Review[]>([]);
+
   useEffect(() => {
-    type === 'movie' ? fetchReviews(id, setReviews) : fetchSeriesReviews(id, setReviews);
+    fetchReviews(id, type).then(setReviews);
   }, [id]);
+
   return (
     <div
       id='reviews'
@@ -15,23 +23,23 @@ function Reviews({ id, type = 'movie' }) {
       } space-y-4`}
     >
       {Object.keys(reviews).length > 0
-        ? reviews.map((review, index) => (
+        ? reviews.map(({ author, content, createdAt, updatedAt }, index) => (
             <div key={index} className='space-y-2 p-4 bg-secondary rounded-xl'>
               <p>
                 Written by{" "}
-                <span className='text-quaternary'>{review.author}</span>
+                <span className='text-quaternary'>{author}</span>
                 <br />
                 Posted at{" "}
                 <span className='text-quaternary'>
-                  {splitReviewsDate(review.created_at)}
+                  {splitReviewsDate(createdAt)}
                 </span>
               </p>
               <p className='flex flex-col w-full'>
                 <span className='w-full max-h-48 overflow-y-hidden'>
-                  {review.content}
+                  {content}
                 </span>
                 <span className='w-full text-right text-quaternary'>
-                  Latest updated at {splitReviewsDate(review.updated_at)}
+                  Latest updated at {splitReviewsDate(updatedAt)}
                 </span>
               </p>
             </div>

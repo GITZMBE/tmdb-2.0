@@ -1,37 +1,40 @@
 import React, { useEffect, useState, useRef } from "react";
 import { fetchProviders } from "../api/fetch";
+import { Provider } from "../models/providers";
 
 function Providers() {
   const baseUrl = "https://image.tmdb.org/t/p/w500";
-  const [providers, setProviders] = useState([]);
+  const [providers, setProviders] = useState<Provider[]>([]);
   useEffect(() => {
-    fetchProviders(setProviders);
+    fetchProviders().then(setProviders);
   }, []);
 
-  const scrollContainerRef = useRef(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
-  const handleMouseDown = (e) => {
+  const handleMouseDown = (e: any) => {
+    if (!scrollContainerRef.current) return;
+
     setIsDragging(true);
     setStartX(e.pageX - scrollContainerRef.current.offsetLeft);
     setScrollLeft(scrollContainerRef.current.scrollLeft);
     scrollContainerRef.current.style.cursor = "grabbing";
   };
   const handleMouseUp = () => {
-    if (isDragging) {
-      setIsDragging(false);
-      scrollContainerRef.current.style.cursor = "grab";
-    }
+    if (!isDragging || !scrollContainerRef.current) return;
+
+    setIsDragging(false);
+    scrollContainerRef.current.style.cursor = "grab";
   };
   const handleMouseLeave = () => {
-    if (isDragging) {
-      setIsDragging(false);
-      scrollContainerRef.current.style.cursor = "grab";
-    }
+    if (!isDragging || !scrollContainerRef.current) return;
+
+    setIsDragging(false);
+    scrollContainerRef.current.style.cursor = "grab";
   };
-  const handleMouseMove = (e) => {
-    if (!isDragging) return;
+  const handleMouseMove = (e: any) => {
+    if (!isDragging || !scrollContainerRef.current) return;
     e.preventDefault();
     const x = e.pageX - scrollContainerRef.current.offsetLeft;
     const walk = (x - startX) * 1.5;

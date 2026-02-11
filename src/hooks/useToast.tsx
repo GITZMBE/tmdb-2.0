@@ -1,3 +1,4 @@
+import type { ToastType } from "../models";
 import { toastState } from "../states";
 import { useSetRecoilState } from "recoil";
 
@@ -7,9 +8,9 @@ export const useToast = () => {
   const setToasts = useSetRecoilState(toastState);
 
   const showToast = (
-    message,
-    type = "info",
-    duration = 4000
+    message: string,
+    type: ToastType = "info",
+    duration: number = 4000
   ) => {
     setToasts((prev) => [
       ...prev,

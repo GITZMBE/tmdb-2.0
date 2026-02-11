@@ -1,5 +1,5 @@
 export * from "./Trailer";
-export * from "./ui/MoviesContainer";
+export * from "./ui/VideosContainer";
 export * from "./MoviePoster";
 export * from "./SeriesContainer";
 export * from "./SeriesPoster";
