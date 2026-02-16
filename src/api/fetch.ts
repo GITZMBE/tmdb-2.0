@@ -1,6 +1,9 @@
-import { Genre, Logo, LogoDTO, MovieDTO, Review, ReviewDTO, SeriesDTO, VideoKey, VideoKeyDTO, VideoType } from "../models";
+import { Genre, Logo, LogoDTO, MovieDTO, Review, ReviewDTO, Season, SeasonDto, SeriesDTO, VideoKey, VideoKeyDTO, VideoType } from "../models";
+import { CreditDto } from "../models/credit";
 import { Provider } from "../models/providers";
 import { MovieSeriesToVideo, MoviesSeriesPaginatedToVideosPaginated, MoviesSeriesToVideos } from "../utils";
+import { creditDtoToCredit } from "../utils/credit";
+import { seasonDtoToSeason } from "../utils/season";
 
 const AUTHENTICATION_KEY = process.env.REACT_APP_AUTHENTICATION_KEY;
 const API_KEY = process.env.REACT_APP_API_KEY;
@@ -122,8 +125,8 @@ export const fetchUpcoming = async (type: VideoType = "movie") => {
   return video;
 };
 
-export const fetchRelatedMovies = async (id: number, callback: (_: any) => void) => {
-  const url = `https://api.themoviedb.org/3/movie/${id}/similar?language=en-US&page=1`;
+export const fetchRelatedVideos = async (id: number, type: VideoType = "movie") => {
+  const url = `https://api.themoviedb.org/3/${type === "movie" ? "movie" : "tv"}/${id}/similar?language=en-US&page=1`;
   const options = {
     method: "GET",
     headers: {
@@ -133,23 +136,8 @@ export const fetchRelatedMovies = async (id: number, callback: (_: any) => void)
   };
   const response = await fetch(url, options);
   const results = await response.json();
-  const movies = results.results;
-  callback(movies);
-};
-
-export const fetchRelatedSeries = async (id: number, callback: (_: any) => void) => {
-  const url = `https://api.themoviedb.org/3/tv/${id}/similar?language=en-US&page=1`;
-  const options = {
-    method: "GET",
-    headers: {
-      accept: "application/json",
-      Authorization: `Bearer ${AUTHENTICATION_KEY}`,
-    },
-  };
-  const response = await fetch(url, options);
-  const results = await response.json();
-  const series = results.results;
-  callback(series);
+  const data = results.results as MovieDTO[] | SeriesDTO[];
+  return MoviesSeriesToVideos(data, type);
 };
 
 export const fetchGenres = async () => {
@@ -185,8 +173,8 @@ export const fetchProviders = async () => {
   return data as Provider[];
 };
 
-export const fetchMovieCredits = async (id: number, callback: (_: any) => void) => {
-  const url = `https://api.themoviedb.org/3/movie/${id}/credits?language=en-US`;
+export const fetchCredits = async (id: number, type: VideoType) => {
+  const url = `https://api.themoviedb.org/3/${type === "movie" ? "movie" : "tv"}/${id}/credits?language=en-US`;
   const options = {
     method: "GET",
     headers: {
@@ -195,24 +183,9 @@ export const fetchMovieCredits = async (id: number, callback: (_: any) => void) 
     },
   };
   const response = await fetch(url, options);
-  const results = await response.json();
-  const cast = results.cast;
-  callback(cast);
-};
-
-export const fetchSeriesCredits = async (id: number, callback: (_: any) => void) => {
-  const url = `https://api.themoviedb.org/3/tv/${id}/credits?language=en-US`;
-  const options = {
-    method: "GET",
-    headers: {
-      accept: "application/json",
-      Authorization: `Bearer ${AUTHENTICATION_KEY}`,
-    },
-  };
-  const response = await fetch(url, options);
-  const results = await response.json();
-  const cast = results.cast;
-  callback(cast);
+  const results = await response.json() as CreditDto;
+  const credits = creditDtoToCredit(results);
+  return credits;
 };
 
 export const fetchReviews = async (id: number, type: VideoType) => {
@@ -240,9 +213,9 @@ export const fetchFilter = async (
   page: number,
   translation: string,
   year: number,
-  callback: (_: any) => void
+  type: VideoType = "movie",
 ) => {
-  const url = `https://api.themoviedb.org/3/discover/movie?with_genres=${genreId}&page=${page}&language=${translation}&primary_release_year=${year}`;
+  const url = `https://api.themoviedb.org/3/discover/${type === "movie" ? "movie" : "tv"}?with_genres=${genreId}&page=${page}&language=${translation}&primary_release_year=${year}`;
   const options = {
     method: "GET",
     headers: {
@@ -252,8 +225,9 @@ export const fetchFilter = async (
   };
   const response = await fetch(url, options);
   const results = await response.json();
-  const movies = results.results;
-  callback(movies);
+  const data = results.results as MovieDTO[] | SeriesDTO[];
+  const videos = MoviesSeriesToVideos(data, type);
+  return videos;
 };
 
 export const fetchTranslations = async (callback: (_: any) => void) => {
@@ -323,8 +297,9 @@ export const fetchSeriesSeasonInfo = async (seriesId: number, seasonNumber: numb
     },
   };
   const response = await fetch(url, options);
-  const results = await response.json();
-  return results;
+  const result = await response.json() as SeasonDto;
+  const season = seasonDtoToSeason(result);
+  return season;
 };
 
 export const fetchLogo = async (id: number, type: VideoType = "movie") => {

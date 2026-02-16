@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from "react";
+import { Toast } from "../../../models";
 
-// interface Props {
-//   toast: Toast;
-//   onClose: () => void;
-// }
+interface Props {
+  toast: Toast;
+  onClose: () => void;
+}
 
-export const ToastItem = ({ toast, onClose }) => {
+export const ToastItem = ({ toast, onClose }: Props) => {
   const [progress, setProgress] = useState(100);
   const [paused, setPaused] = useState(false);
   const startTime = useRef(Date.now());

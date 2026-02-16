@@ -6,15 +6,16 @@ export const MovieRedirect = () => {
   const externalStreamUrl = "https://getsuperembed.link";
   const initialSrc = `${externalStreamUrl}?video_id=${id}&tmdb=1`;
   const redirectUrl = "https://streamingnow.mov";
-  const iframeRef = useRef(null);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
   const skipInitialRef = useRef(true);
   const redirectTriggeredRef = useRef(false);
   const loggedDocRef = useRef(false);
 
   useEffect(() => {
     console.log('render')
-    const iframe = iframeRef.current;
-    console.log(iframe.contentDocument)
+    const iframe: HTMLIFrameElement | null = iframeRef.current;
+    if (!iframe?.contentDocument) return;
+    console.log(iframe?.contentDocument)
     if (!iframe) return;
 
     // prevent multiple redirects
@@ -23,7 +24,7 @@ export const MovieRedirect = () => {
     // Ensure we skip the mutation caused by setting the initial src on mount.
     skipInitialRef.current = true;
 
-    const makeRedirect = (url) => {
+    const makeRedirect = (url: string) => {
       if (!url || redirectTriggeredRef.current) return;
       if (!url.startsWith(redirectUrl)) return;
       redirectTriggeredRef.current = true;
@@ -34,7 +35,7 @@ export const MovieRedirect = () => {
       }
     };
 
-    const extractUrlFromDoc = (doc) => {
+    const extractUrlFromDoc = (doc: any) => {
       try {
         if (!doc) return null;
         // Prefer location.href when same-origin
@@ -59,7 +60,7 @@ export const MovieRedirect = () => {
       return null;
     };
 
-    const logIframeContent = (doc) => {
+    const logIframeContent = (doc: any) => {
       if (!doc) return;
       try {
         const href = doc.location?.href || null;
@@ -83,7 +84,7 @@ export const MovieRedirect = () => {
     };
 
     // Polling: sometimes the iframe updates its document after load; poll for a few seconds
-    let pollHandle = null;
+    let pollHandle: any = null;
     const startPolling = (timeoutMs = 15000, intervalMs = 400) => {
       const start = Date.now();
       pollHandle = setInterval(() => {
@@ -167,15 +168,15 @@ export const MovieRedirect = () => {
   }, [id, redirectUrl]);
 
   return (
-    <>redirect</>
-    // <iframe
-    //   ref={iframeRef}
-    //   src={initialSrc}
-    //   title={id ? `External stream ${id}` : "External stream"}
-    //   frameBorder='0'
-    //   className='w-full aspect-video'
-    //   allowFullScreen
-    // />
+    // <>redirect</>
+    <iframe
+      ref={iframeRef}
+      src={initialSrc}
+      title={id ? `External stream ${id}` : "External stream"}
+      frameBorder='0'
+      className='w-full aspect-video'
+      allowFullScreen
+    />
   );
 };
 

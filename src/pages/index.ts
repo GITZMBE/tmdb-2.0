@@ -5,6 +5,5 @@ export * from './Genre';
 export * from './Genres';
 export * from './MovieRedirect';
 export * from './Dashboard';
-export * from './MoviePage';
-export * from './SeriesPage';
+export * from './StreamPage';
 export * from './Dashboard';

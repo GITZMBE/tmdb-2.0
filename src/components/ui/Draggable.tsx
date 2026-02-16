@@ -1,30 +1,35 @@
 import React, { useRef, useState } from "react";
 
-function Draggable({ children }) {
-  const scrollContainerRef = useRef(null);
+interface Props {
+  children: React.ReactNode;
+}
+
+function Draggable({ children }: Props) {
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
-  const handleMouseDown = (e) => {
+  const handleMouseDown = (e: any) => {
+    if (!scrollContainerRef.current) return;
     setIsDragging(true);
     setStartX(e.pageX - scrollContainerRef.current.offsetLeft);
     setScrollLeft(scrollContainerRef.current.scrollLeft);
     scrollContainerRef.current.style.cursor = "grabbing";
   };
   const handleMouseUp = () => {
-    if (isDragging) {
+    if (isDragging && scrollContainerRef.current) {
       setIsDragging(false);
       scrollContainerRef.current.style.cursor = "grab";
     }
   };
   const handleMouseLeave = () => {
-    if (isDragging) {
+    if (isDragging && scrollContainerRef.current) {
       setIsDragging(false);
       scrollContainerRef.current.style.cursor = "grab";
     }
   };
-  const handleMouseMove = (e) => {
-    if (!isDragging) return;
+  const handleMouseMove = (e: any) => {
+    if (!isDragging || !scrollContainerRef.current) return;
     e.preventDefault();
     const x = e.pageX - scrollContainerRef.current.offsetLeft;
     const walk = (x - startX) * 1.5;

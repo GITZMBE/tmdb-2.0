@@ -37,7 +37,6 @@ export function Trailer({ videoKey, className, ...rest }: Props) {
       opts={opts}
       onEnd={handleEnd}
       onPlay={handlePlay}
-      {...rest}
     />
   );
 }

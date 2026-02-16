@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { fetchFilter, fetchGenres, fetchTranslations } from "../api/fetch.js";
-import Poster from "../components/ui/Poster.jsx";
+import { fetchFilter, fetchGenres, fetchTranslations } from "../api";
+import Poster from "../components/ui/Poster";
 import { BsFilterSquare } from "react-icons/bs";
-import type { Filter as IFilter, Genre } from "../models";
+import type { Filter as IFilter, Genre, Video } from "../models";
 
 const genresData: Genre[] = [
   {
@@ -242,7 +242,7 @@ export const Filter = () => {
     locales: localesData,
     years: yearsData,
   };
-  const [movies, setMovies] = useState([]);
+  const [videos, setVideos] = useState<Video[]>([]);
 
   const filterSearch = () => {
     const { genre, pages, locale, year } = formData;
@@ -259,7 +259,7 @@ export const Filter = () => {
     )
       return;
 
-    fetchFilter(genre, pages, locale, year, setMovies);
+    fetchFilter(genre, pages, locale, year, 'movie').then(setVideos);
   };
 
   useEffect(() => {
@@ -347,9 +347,7 @@ export const Filter = () => {
           </button>
         </div>
         <div className='flex flex-wrap justify-center sm:justify-start gap-4 w-full py-4'>
-          {Object.keys(movies).length > 0
-            ? movies.map(({ id, title, poster_path, release_date, vote_average }) => <Poster key={id} id={id} type='movie' title={title} imagePath={poster_path} releaseDate={release_date} rating={vote_average} />)
-            : null}
+          {videos.map(({ id, type, title, description, posterPath, backdropPath, releaseDate, rating, genreIds }) => <Poster key={id} id={id} type={type} title={title} description={description} posterPath={posterPath} backdropPath={backdropPath} releaseDate={releaseDate} rating={rating} genreIds={genreIds} />)}
         </div>
       </div>
     </div>

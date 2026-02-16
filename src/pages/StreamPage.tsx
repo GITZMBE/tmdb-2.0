@@ -1,13 +1,14 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { AiOutlineArrowUp, AiOutlineArrowDown, AiFillPlayCircle } from "react-icons/ai";
-import { fetchMovieInfo, fetchVideoKey } from "../api/fetch";
+import { fetchInfo, fetchVideoKey } from "../api/fetch";
 import Related from "../components/Related";
 import { BsDot } from "react-icons/bs";
 import Credits from "../components/Credits";
 // import Reviews from "../components/Reviews";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useSearchParams } from "react-router-dom";
+import { Genre, Video, VideoType } from "../models";
 
-const genresData = [
+const genresData: Genre[] = [
   {
       "id": 28,
       "name": "Action"
@@ -88,15 +89,17 @@ const genresData = [
 
 export const MoviePage = () => {
   const { id } = useParams();
-  const [movie, setMovie] = useState(null);
+  const [searchParams] = useSearchParams();
+  const type: VideoType = searchParams.get("type") as VideoType || "movie";
+  const [video, setVideo] = useState<Video | null>(null);
   const [videoInfo, setVideoInfo] = useState({});
-  const [genres, setGenres] = useState([]);
+  const [genres, setGenres] = useState<Genre[]>([]);
   const [votes, setVotes] = useState(0);
 
   const streamUrl = "https://multiembed.mov/";
   const externalStreamUrl = "https://getsuperembed.link";
 
-  let { title, overview, release_date, genre_ids, vote_count, vote_average } = useMemo(() => movie || { title: '', overview: '', release_date: '', genre_ids: [], vote_count: 0, vote_average: 0 }, [movie]);
+  let { title, description, posterPath, backdropPath, releaseDate, rating, genreIds } = useMemo(() => video || {}, [video]) as Video;
 
   const getPopularity = ( voteAverage = 1 ) => {return (voteAverage * 10).toString().substring(0, 2)};
 
@@ -108,22 +111,22 @@ export const MoviePage = () => {
   useEffect(() => {
     if (!id) return;
 
-    fetchMovieInfo(id).then((selectedMovie) => setMovie(selectedMovie));
-    fetchVideoKey(id).then((vid) => setVideoInfo(vid));
+    fetchInfo(+id, type).then(setVideo);
+    fetchVideoKey(+id, type).then(setVideoInfo);
   }, [id]);
 
   useEffect(() => {
-    setVotes(vote_count);
-  }, [vote_count]);
+    setVotes(rating);
+  }, [rating]);
 
-  return movie && (
+  return video && (
     <div id='moviePoster'>
       <div className='w-full min-h-screen pb-4 bg-primary text-white space-y-4'>
         {/* <Banner topMovie={movie}> */}
           {/* <Trailer videoKey={videoInfo && videoInfo.key} className='hidden' /> */}
           <iframe
-            src={streamUrl + `?video_id=${movie.id}&tmdb=1`}
-            title={`Stream for ${title || movie.title || `movie-${movie.id}`}`}
+            src={streamUrl + `?video_id=${video.id}&tmdb=1`}
+            title={`Stream for ${title || video.title || `movie-${video.id}`}`}
             frameBorder="0"
             className="w-full aspect-video"
             allowFullScreen
@@ -149,21 +152,21 @@ export const MoviePage = () => {
           <div>
             <h2 className='text-xl font-bold'>Genres</h2>
             <p className='flex gap-2'>
-              {genre_ids?.map((genreId, index) => (
+              {genreIds?.map((genreId, index) => (
                 <React.Fragment key={index}>
-                  <span>{genres.find((genreItem) => genreItem.id === genreId).name}</span>&nbsp;
-                  {index !== genre_ids.length - 1 && <BsDot size={22} />}
+                  <span>{genres.find((genreItem) => genreItem.id === genreId)?.name}</span>&nbsp;
+                  {index !== genreIds.length - 1 && <BsDot size={22} />}
                 </React.Fragment>
               ))}
             </p>
           </div>
           <div className='pb-4'>
             <h2 className='text-xl font-bold'>Description</h2>
-            <p>{overview}</p>
+            <p>{description}</p>
           </div>
           <div className='pb-4'>
             <h2 className='text-xl font-bold'>Release Date</h2>
-            <p>{release_date}</p>
+            <p>{releaseDate}</p>
           </div>
           {/* <div className='flex items-center gap-4'>
             <h2 className='text-xl font-bold'>Votes: </h2>
@@ -180,14 +183,14 @@ export const MoviePage = () => {
             </div>
           </div> */}
           <div className='relative flex w-full h-12 border-white border-2'>
-            <div style={{ width: `${getPopularity(vote_average)}%` }} className='bg-green-500 h-full'></div>
-            <p className='absolute w-full text-center leading-[48px] tracking-[16px]'>
-              Popularity {getPopularity(vote_average)}%
+            <div style={{ width: `${getPopularity(rating)}%` }} className='bg-green-500 h-full'></div>
+            <p className='absolute w-full text-center leading-12 tracking-[16px]'>
+              Popularity {getPopularity(rating)}%
             </p>
           </div>
-          <Credits id={id} />
+          <Credits id={id ? +id : 0} type={type} />
           {/* <Reviews id={id} /> */}
-          <Related id={id} />
+          <Related id={id ? +id : 0} type={type} />
         </div>
       </div>
     </div>
